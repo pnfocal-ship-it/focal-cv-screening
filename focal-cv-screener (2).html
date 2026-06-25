@@ -2,17 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Focal ME — CV Screener Pro</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body,#root{height:100%;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#EEF4FF;color:#0F172A}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#BFDBFE;border-radius:4px}
-.s-input{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;font-family:inherit;color:white;background:rgba(255,255,255,0.08);outline:none;transition:border-color .15s,box-shadow .15s}
+.s-input{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;font-family:inherit;color:white;background:rgba(255,255,255,0.08);outline:none;transition:border-color .15s}
 .s-input::placeholder{color:rgba(255,255,255,0.32)}
 .s-input:focus{border-color:rgba(255,255,255,0.5);box-shadow:0 0 0 3px rgba(255,255,255,0.08)}
 textarea.s-input{resize:vertical;line-height:1.5}
@@ -23,18 +22,20 @@ textarea.s-input{resize:vertical;line-height:1.5}
 .fu{animation:fadeUp .35s ease forwards;opacity:0}
 @media(max-width:880px){
   .app-shell{flex-direction:column!important;height:auto!important;min-height:100vh}
-  .app-sidebar{width:100%!important;min-width:0!important;max-height:none!important}
+  .app-sidebar{width:100%!important;min-width:0!important}
   .app-main{height:auto!important}
 }
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel" data-type="module">
+<script>
 const {useState,useCallback,useRef,useEffect,useMemo}=React;
+const R=React.createElement;
 
 const LOGO="data:image/jpeg;base64,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";
 
+// ── Utilities ────────────────────────────────────────────
 function loadScript(src){
   return new Promise((res,rej)=>{
     const ex=document.querySelector('script[src="'+src+'"]');
@@ -44,6 +45,7 @@ function loadScript(src){
   });
 }
 
+// ── CV Extraction ────────────────────────────────────────
 async function fromPDF(file){
   await loadScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
   window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -77,21 +79,22 @@ async function fromImage(file){
   });
 }
 
+// ── Claude Analysis ──────────────────────────────────────
 const PROMPT_SCHEMA='Extract ALL available information carefully. Respond ONLY with valid JSON, no markdown:\n{"candidate_name":"full name or Unknown","score":<0-100>,"match_level":"Excellent|Good|Fair|Poor","years_experience":<int or null>,"current_role":"recent title or null","nationality":"country of nationality if mentioned or null","location":"current country/city if mentioned or null","age":<int or null>,"gender":"Male|Female|null","companies":["company1","company2"],"me_experience":<int or null>,"me_companies":[{"name":"company","country":"UAE","years":<int or null>}],"top_strengths":["s1","s2","s3"],"concerns":[] or ["c1","c2"],"key_skills":["sk1","sk2","sk3","sk4","sk5","sk6"],"languages":["English","Arabic"],"education":"highest degree and field or null","universities":["University of X","MIT"],"summary":"3-4 sentences on fit for this specific role"}\n\nNotes:\n- nationality: look for passport, citizenship, nationality statements\n- location: current city/country they live or work in\n- age: calculate from birth year if stated (current year is 2026), or extract directly if written\n- gender: infer from name or pronouns only if very clear, otherwise null\n- companies: list ALL companies/employers mentioned\n- languages: list all languages mentioned\n- me_experience: total years worked in ME region (UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, Oman, Jordan, Egypt, Lebanon, Iraq). Integer or null.\n- me_companies: ME-based employers only, with country and years (null if unclear).\n- universities: list ALL universities, colleges, or educational institutions mentioned. Empty array [] if none found.';
 
 async function analyzeCV(extracted,jobTitle,jobDesc,apiKey,attempt=0){
-  const {text,images,isImageBased}=extracted;
+  const{text,images,isImageBased}=extracted;
   const headers={"Content-Type":"application/json","anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"};
-  if(apiKey) headers["x-api-key"]=apiKey;
-  const intro='You are an expert HR recruiter. Analyze this CV thoroughly for the role: "'+jobTitle+'"'+(jobDesc?'\n\nJob description:\n'+jobDesc:'');
+  if(apiKey)headers["x-api-key"]=apiKey;
+  const intro="You are an expert HR recruiter. Analyze this CV thoroughly for the role: \""+jobTitle+"\""+( jobDesc?"\n\nJob description:\n"+jobDesc:"");
   let msgContent;
   if(isImageBased&&images.length>0){
     msgContent=[
-      {type:"text",text:intro+'\n\nThis CV is image-based. Read all text visible in the image(s) carefully.\n\n'+PROMPT_SCHEMA},
+      {type:"text",text:intro+"\n\nThis CV is image-based. Read all text visible in the image(s) carefully.\n\n"+PROMPT_SCHEMA},
       ...images.map(img=>({type:"image",source:{type:"base64",media_type:img.mediaType,data:img.data}}))
     ];
   } else {
-    msgContent=intro+'\n\n'+PROMPT_SCHEMA+'\n\nFULL CV:\n'+text;
+    msgContent=intro+"\n\n"+PROMPT_SCHEMA+"\n\nFULL CV:\n"+text;
   }
   try{
     const resp=await fetch("https://api.anthropic.com/v1/messages",{
@@ -102,7 +105,7 @@ async function analyzeCV(extracted,jobTitle,jobDesc,apiKey,attempt=0){
       await new Promise(r=>setTimeout(r,Math.min(2000*Math.pow(2,attempt),30000)));
       return analyzeCV(extracted,jobTitle,jobDesc,apiKey,attempt+1);
     }
-    if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error?.message||'API '+resp.status);}
+    if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error?.message||"API "+resp.status);}
     const d=await resp.json();
     return JSON.parse(d.content.map(b=>b.text||"").join("").replace(/```json|```/g,"").trim());
   }catch(err){
@@ -114,35 +117,59 @@ async function analyzeCV(extracted,jobTitle,jobDesc,apiKey,attempt=0){
   }
 }
 
+// ── Constants ────────────────────────────────────────────
+const RANKS=[
+  {badge:"Top Match",border:"#F59E0B",hbg:"linear-gradient(135deg,#FFFBEB,#FEF3C7)",ac:"#92400E",medal:"🥇"},
+  {badge:"2nd Place",border:"#94A3B8",hbg:"#F8FAFC",ac:"#475569",medal:"🥈"},
+  {badge:"3rd Place",border:"#CD7F32",hbg:"#FFFAF5",ac:"#713F12",medal:"🥉"},
+];
+const MATCH={
+  Excellent:{bg:"#DCFCE7",c:"#14532D",dot:"#10B981"},
+  Good:{bg:"#DBEAFE",c:"#1E3A8A",dot:"#3B82F6"},
+  Fair:{bg:"#FEF9C3",c:"#713F12",dot:"#F59E0B"},
+  Poor:{bg:"#FEE2E2",c:"#7F1D1D",dot:"#EF4444"},
+};
+function rankMeta(i){if(i<3)return RANKS[i];return{badge:"Rank #"+(i+1),border:"#DBEAFE",hbg:"white",ac:"#3B82F6",medal:"#"+(i+1)};}
+
+// ── UI Components ────────────────────────────────────────
+function Spin({color="#3B82F6",size=16}){
+  return R("div",{style:{width:size,height:size,border:"2.5px solid "+color+"22",borderTopColor:color,borderRadius:"50%",animation:"spin .7s linear infinite",flexShrink:0}});
+}
 function Ring({score,size=90}){
-  if(score==null) return null;
+  if(score==null)return null;
   const r=size/2-10,circ=2*Math.PI*r,dash=(score/100)*circ;
   const col=score>=75?"#10B981":score>=50?"#F59E0B":"#EF4444";
   const tr=score>=75?"#D1FAE5":score>=50?"#FEF3C7":"#FEE2E2";
-  return(<svg width={size} height={size} style={{display:"block",flexShrink:0}}>
-    <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={tr} strokeWidth="8"/>
-    <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={col} strokeWidth="8" strokeDasharray={dash+" "+circ} strokeLinecap="round" style={{transform:"rotate(-90deg)",transformOrigin:"center"}}/>
-    <text x={size/2} y={size/2-7} textAnchor="middle" dominantBaseline="central" fill={col} fontSize="20" fontWeight="700">{score}</text>
-    <text x={size/2} y={size/2+12} textAnchor="middle" fill={col} fontSize="10" opacity="0.6">/100</text>
-  </svg>);
+  return R("svg",{width:size,height:size,style:{display:"block",flexShrink:0}},
+    R("circle",{cx:size/2,cy:size/2,r,fill:"none",stroke:tr,strokeWidth:"8"}),
+    R("circle",{cx:size/2,cy:size/2,r,fill:"none",stroke:col,strokeWidth:"8",strokeDasharray:dash+" "+circ,strokeLinecap:"round",style:{transform:"rotate(-90deg)",transformOrigin:"center"}}),
+    R("text",{x:size/2,y:size/2-7,textAnchor:"middle",dominantBaseline:"central",fill:col,fontSize:"20",fontWeight:"700"},score),
+    R("text",{x:size/2,y:size/2+12,textAnchor:"middle",fill:col,fontSize:"10",opacity:"0.6"},"/100")
+  );
 }
 function MiniRing({score,size=50}){
-  if(score==null) return null;
+  if(score==null)return null;
   const r=size/2-6,circ=2*Math.PI*r,dash=(score/100)*circ;
   const col=score>=75?"#10B981":score>=50?"#F59E0B":"#EF4444";
   const tr=score>=75?"#DCFCE7":score>=50?"#FEF9C3":"#FEE2E2";
-  return(<svg width={size} height={size} style={{display:"block",flexShrink:0}}>
-    <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={tr} strokeWidth="5.5"/>
-    <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={col} strokeWidth="5.5" strokeDasharray={dash+" "+circ} strokeLinecap="round" style={{transform:"rotate(-90deg)",transformOrigin:"center"}}/>
-    <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central" fill={col} fontSize="13" fontWeight="700">{score}</text>
-  </svg>);
+  return R("svg",{width:size,height:size,style:{display:"block",flexShrink:0}},
+    R("circle",{cx:size/2,cy:size/2,r,fill:"none",stroke:tr,strokeWidth:"5.5"}),
+    R("circle",{cx:size/2,cy:size/2,r,fill:"none",stroke:col,strokeWidth:"5.5",strokeDasharray:dash+" "+circ,strokeLinecap:"round",style:{transform:"rotate(-90deg)",transformOrigin:"center"}}),
+    R("text",{x:size/2,y:size/2,textAnchor:"middle",dominantBaseline:"central",fill:col,fontSize:"13",fontWeight:"700"},score)
+  );
 }
-function Spin({color="#3B82F6",size=16}){
-  return <div style={{width:size,height:size,border:"2.5px solid "+color+"22",borderTopColor:color,borderRadius:"50%",animation:"spin .7s linear infinite",flexShrink:0}}/>;
+function Chip({label,onRemove}){
+  return R("span",{style:{display:"inline-flex",alignItems:"center",gap:5,fontSize:11,fontWeight:600,padding:"3px 10px",background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,border:"1px solid #BFDBFE"}},
+    label,
+    onRemove&&R("button",{onClick:onRemove,style:{background:"none",border:"none",cursor:"pointer",color:"#93C5FD",padding:0,fontSize:12,lineHeight:1,fontFamily:"inherit"}},"×")
+  );
 }
 
+// ── PDF/DOCX Viewer ──────────────────────────────────────
 function PDFViewer({file}){
-  const ref=useRef(null);const[status,setStatus]=useState("loading");const[pages,setPages]=useState(0);
+  const ref=useRef(null);
+  const[status,setStatus]=useState("loading");
+  const[pages,setPages]=useState(0);
   useEffect(()=>{
     if(!file)return;let dead=false;setStatus("loading");setPages(0);
     if(ref.current)ref.current.innerHTML="";
@@ -163,15 +190,16 @@ function PDFViewer({file}){
     }catch(e){if(!dead)setStatus("error");}})();
     return()=>{dead=true;};
   },[file]);
-  return(<div>
-    {status==="loading"&&<div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:"3rem",color:"#64748B",fontSize:14}}><Spin color="#2563EB" size={20}/>Rendering PDF…</div>}
-    {status==="error"&&<div style={{padding:"2rem",textAlign:"center",color:"#EF4444",fontSize:14}}>Could not render PDF preview.</div>}
-    <div ref={ref} style={{maxHeight:"calc(100vh - 360px)",overflowY:"auto",padding:"4px"}}/>
-    {status==="done"&&<div style={{fontSize:12,color:"#94A3B8",textAlign:"center",marginTop:6}}>{pages} page{pages!==1?"s":""}</div>}
-  </div>);
+  return R("div",null,
+    status==="loading"&&R("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:"3rem",color:"#64748B",fontSize:14}},R(Spin,{color:"#2563EB",size:20}),"Rendering PDF…"),
+    status==="error"&&R("div",{style:{padding:"2rem",textAlign:"center",color:"#EF4444",fontSize:14}},"Could not render PDF preview."),
+    R("div",{ref,style:{maxHeight:"calc(100vh - 360px)",overflowY:"auto",padding:"4px"}}),
+    status==="done"&&R("div",{style:{fontSize:12,color:"#94A3B8",textAlign:"center",marginTop:6}},pages+" page"+(pages!==1?"s":""))
+  );
 }
 function DOCXViewer({file}){
-  const[html,setHtml]=useState("");const[status,setStatus]=useState("loading");
+  const[html,setHtml]=useState("");
+  const[status,setStatus]=useState("loading");
   useEffect(()=>{
     if(!file)return;
     (async()=>{try{
@@ -180,34 +208,24 @@ function DOCXViewer({file}){
       setHtml(r.value);setStatus("done");
     }catch(e){setStatus("error");}})();
   },[file]);
-  if(status==="loading")return <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:"3rem",color:"#64748B",fontSize:14}}><Spin color="#2563EB" size={20}/>Rendering document…</div>;
-  if(status==="error")return <div style={{padding:"2rem",textAlign:"center",color:"#EF4444",fontSize:14}}>Could not render document preview.</div>;
-  return(<div style={{maxHeight:"calc(100vh - 360px)",overflowY:"auto",background:"white",borderRadius:10,border:"1px solid #DBEAFE",padding:"28px 36px"}}>
-    <div dangerouslySetInnerHTML={{__html:html}} style={{fontFamily:"Georgia,serif",fontSize:14,lineHeight:1.9,color:"#0F172A"}}/>
-  </div>);
+  if(status==="loading")return R("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:"3rem",color:"#64748B",fontSize:14}},R(Spin,{color:"#2563EB",size:20}),"Rendering document…");
+  if(status==="error")return R("div",{style:{padding:"2rem",textAlign:"center",color:"#EF4444",fontSize:14}},"Could not render document preview.");
+  return R("div",{style:{maxHeight:"calc(100vh - 360px)",overflowY:"auto",background:"white",borderRadius:10,border:"1px solid #DBEAFE",padding:"28px 36px"}},
+    R("div",{dangerouslySetInnerHTML:{__html:html},style:{fontFamily:"Georgia,serif",fontSize:14,lineHeight:1.9,color:"#0F172A"}})
+  );
 }
 function CVViewer({candidate}){
   const file=candidate._fileObj;
-  if(!file)return <div style={{padding:"2rem",textAlign:"center",color:"#94A3B8",fontSize:14}}>File preview not available.</div>;
-  return file.name.toLowerCase().endsWith(".pdf")||file.type==="application/pdf"?<PDFViewer file={file}/>:<DOCXViewer file={file}/>;
+  if(!file)return R("div",{style:{padding:"2rem",textAlign:"center",color:"#94A3B8",fontSize:14}},"File preview not available.");
+  const n=file.name.toLowerCase();
+  return(n.endsWith(".pdf")||file.type==="application/pdf")?R(PDFViewer,{file}):R(DOCXViewer,{file});
 }
 
-const RANKS=[
-  {badge:"Top Match",border:"#F59E0B",hbg:"linear-gradient(135deg,#FFFBEB,#FEF3C7)",ac:"#92400E",medal:"\u{1F947}"},
-  {badge:"2nd Place",border:"#94A3B8",hbg:"#F8FAFC",ac:"#475569",medal:"\u{1F948}"},
-  {badge:"3rd Place",border:"#CD7F32",hbg:"#FFFAF5",ac:"#713F12",medal:"\u{1F949}"},
-];
-const MATCH={
-  Excellent:{bg:"#DCFCE7",c:"#14532D",dot:"#10B981"},
-  Good:{bg:"#DBEAFE",c:"#1E3A8A",dot:"#3B82F6"},
-  Fair:{bg:"#FEF9C3",c:"#713F12",dot:"#F59E0B"},
-  Poor:{bg:"#FEE2E2",c:"#7F1D1D",dot:"#EF4444"},
-};
-function rankMeta(i){if(i<3)return RANKS[i];return{badge:"Rank #"+(i+1),border:"#DBEAFE",hbg:"white",ac:"#3B82F6",medal:"#"+(i+1)};}
-
-/* ── Checklist Dropdown ─── */
+// ── Checklist Dropdown ───────────────────────────────────
 function ChecklistDropdown({label,options,selected,onChange,placeholder}){
-  const[open,setOpen]=useState(false);const[search,setSearch]=useState("");const[rect,setRect]=useState(null);
+  const[open,setOpen]=useState(false);
+  const[search,setSearch]=useState("");
+  const[rect,setRect]=useState(null);
   const btnRef=useRef();const dropRef=useRef();
   useEffect(()=>{
     if(!open)return;
@@ -220,176 +238,450 @@ function ChecklistDropdown({label,options,selected,onChange,placeholder}){
   const filtered=options.filter(o=>o.toLowerCase().includes(search.toLowerCase()));
   const toggle=o=>onChange(selected.includes(o)?selected.filter(x=>x!==o):[...selected,o]);
   const btnLabel=selected.length===0?placeholder:selected.length===1?selected[0]:selected.length+" selected";
-  return(
-    <div style={{position:"relative",width:"100%"}}>
-      <button ref={btnRef} className={"f-input"} onClick={()=>setOpen(v=>!v)} style={{cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",gap:6,textAlign:"left",whiteSpace:"nowrap",overflow:"hidden",borderColor:open?"#2563EB":"#DBEAFE"}}>
-        <span style={{overflow:"hidden",textOverflow:"ellipsis",flex:1,minWidth:0}}>{btnLabel}</span>
-        {selected.length>0&&<span onPointerDown={e=>{e.stopPropagation();e.preventDefault();onChange([]);setOpen(false);}} style={{background:"#DBEAFE",color:"#1D4ED8",borderRadius:20,padding:"1px 7px",fontSize:10,fontWeight:700,flexShrink:0,cursor:"pointer"}}>{"\u2715"} {selected.length}</span>}
-        <span style={{flexShrink:0,color:"#94A3B8",fontSize:10}}>{open?"\u25B2":"\u25BC"}</span>
-      </button>
-      {open&&rect&&(
-        <div ref={dropRef} style={{position:"fixed",top:rect.bottom+4,left:rect.left,width:rect.width,background:"white",border:"1.5px solid #DBEAFE",borderRadius:9,boxShadow:"0 8px 32px rgba(37,99,235,0.18)",zIndex:99999,maxHeight:240,overflowY:"auto"}}>
-          <div style={{position:"sticky",top:0,background:"white",borderBottom:"1px solid #EFF6FF",padding:"6px 8px"}}>
-            <input style={{width:"100%",padding:"6px 10px",border:"1.5px solid #DBEAFE",borderRadius:7,fontSize:12,fontFamily:"inherit",outline:"none",color:"#0F172A"}} value={search} onChange={e=>setSearch(e.target.value)} placeholder={"Search "+label.toLowerCase()+"..."} onClick={e=>e.stopPropagation()} autoFocus/>
-          </div>
-          {filtered.length===0&&<div style={{padding:14,fontSize:12,color:"#94A3B8",textAlign:"center"}}>No matches</div>}
-          {filtered.map(o=>{
-            const checked=selected.includes(o);
-            return(<div key={o} onClick={()=>toggle(o)} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",cursor:"pointer",background:checked?"#EFF6FF":"white",borderBottom:"1px solid #F8FAFC"}}>
-              <div style={{width:16,height:16,borderRadius:4,border:"2px solid "+(checked?"#2563EB":"#CBD5E1"),background:checked?"#2563EB":"white",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                {checked&&<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-              </div>
-              <span style={{fontSize:12,color:"#0F172A",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:checked?600:400}}>{o}</span>
-            </div>);
-          })}
-        </div>
-      )}
-    </div>
+  return R("div",{style:{position:"relative",width:"100%"}},
+    R("button",{ref:btnRef,className:"f-input",onClick:()=>setOpen(v=>!v),
+      style:{cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",gap:6,textAlign:"left",whiteSpace:"nowrap",overflow:"hidden",borderColor:open?"#2563EB":"#DBEAFE"}},
+      R("span",{style:{overflow:"hidden",textOverflow:"ellipsis",flex:1,minWidth:0}},btnLabel),
+      selected.length>0&&R("span",{onPointerDown:e=>{e.stopPropagation();e.preventDefault();onChange([]);setOpen(false);},
+        style:{background:"#DBEAFE",color:"#1D4ED8",borderRadius:20,padding:"1px 7px",fontSize:10,fontWeight:700,flexShrink:0,cursor:"pointer"}},"× "+selected.length),
+      R("span",{style:{flexShrink:0,color:"#94A3B8",fontSize:10}},open?"▲":"▼")
+    ),
+    open&&rect&&R("div",{ref:dropRef,style:{position:"fixed",top:rect.bottom+4,left:rect.left,width:rect.width,background:"white",border:"1.5px solid #DBEAFE",borderRadius:9,boxShadow:"0 8px 32px rgba(37,99,235,0.18)",zIndex:99999,maxHeight:240,overflowY:"auto"}},
+      R("div",{style:{position:"sticky",top:0,background:"white",borderBottom:"1px solid #EFF6FF",padding:"6px 8px"}},
+        R("input",{style:{width:"100%",padding:"6px 10px",border:"1.5px solid #DBEAFE",borderRadius:7,fontSize:12,fontFamily:"inherit",outline:"none",color:"#0F172A"},
+          value:search,onChange:e=>setSearch(e.target.value),placeholder:"Search "+label.toLowerCase()+"...",onClick:e=>e.stopPropagation(),autoFocus:true})
+      ),
+      filtered.length===0&&R("div",{style:{padding:14,fontSize:12,color:"#94A3B8",textAlign:"center"}},"No matches"),
+      ...filtered.map(o=>{
+        const checked=selected.includes(o);
+        return R("div",{key:o,onClick:()=>toggle(o),style:{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",cursor:"pointer",background:checked?"#EFF6FF":"white",borderBottom:"1px solid #F8FAFC"}},
+          R("div",{style:{width:16,height:16,borderRadius:4,border:"2px solid "+(checked?"#2563EB":"#CBD5E1"),background:checked?"#2563EB":"white",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}},
+            checked&&R("svg",{width:"10",height:"8",viewBox:"0 0 10 8",fill:"none"},R("path",{d:"M1 4l3 3 5-6",stroke:"white",strokeWidth:"1.8",strokeLinecap:"round",strokeLinejoin:"round"}))
+          ),
+          R("span",{style:{fontSize:12,color:"#0F172A",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:checked?600:400}},o)
+        );
+      })
+    )
   );
 }
 
-function Chip({label,onRemove}){
-  return(<span style={{display:"inline-flex",alignItems:"center",gap:5,fontSize:11,fontWeight:600,padding:"3px 10px",background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,border:"1px solid #BFDBFE"}}>{label}<button onClick={onRemove} style={{background:"none",border:"none",cursor:"pointer",color:"#93C5FD",padding:0,fontSize:12,lineHeight:1,fontFamily:"inherit"}}>{"\u2715"}</button></span>);
-}
-
-/* ── Filter Bar ─── */
-function FilterBar({results,filters,setFilters,sortBy,setSortBy}){
-  const countries=useMemo(()=>{const s=new Set();results.forEach(r=>{if(r.nationality)s.add(r.nationality);if(r.location)s.add(r.location);});return[...s].sort();},[results]);
-  const allCompanies=useMemo(()=>{const s=new Set();results.forEach(r=>(r.companies||[]).forEach(c=>c&&s.add(c)));return[...s].sort();},[results]);
-  const allUniversities=useMemo(()=>{const s=new Set();results.forEach(r=>(r.universities||[]).forEach(u=>u&&s.add(u)));return[...s].sort();},[results]);
-  const selCos=filters.companies||[];const selUnis=filters.universities||[];
-  const activeCount=[filters.gender,filters.country,selCos.length>0,selUnis.length>0,filters.ageMin||filters.ageMax,filters.matchLevel].filter(Boolean).length;
-  const clearAll=()=>setFilters({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});
-  return(
-    <div style={{background:"white",border:"1.5px solid #DBEAFE",borderRadius:12,padding:"14px 16px",marginBottom:14,maxWidth:820}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-        <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <span style={{fontSize:14}}>{"\uD83D\uDD0D"}</span>
-          <span style={{fontSize:13,fontWeight:700,color:"#0D2171"}}>Filter & Sort</span>
-          {activeCount>0&&<span style={{fontSize:11,fontWeight:700,padding:"2px 8px",background:"#2563EB",color:"white",borderRadius:20}}>{activeCount} active</span>}
-        </div>
-        <div style={{display:"flex",gap:8,alignItems:"center"}}>
-          <select value={sortBy} onChange={e=>setSortBy(e.target.value)} style={{padding:"5px 10px",borderRadius:7,border:"1.5px solid #DBEAFE",fontSize:12,fontFamily:"inherit",color:"#0D2171",background:"white",cursor:"pointer"}}>
-            <option value="score">Sort: Best Score</option>
-            <option value="name">Sort: Name A-Z</option>
-            <option value="age">Sort: Youngest First</option>
-            <option value="age_desc">Sort: Oldest First</option>
-            <option value="exp">Sort: Most Experience</option>
-            <option value="me_exp">Sort: Most ME/UAE Exp</option>
-          </select>
-          {activeCount>0&&<button onClick={clearAll} style={{padding:"5px 11px",borderRadius:7,border:"1.5px solid #FECACA",background:"#FFF1F1",color:"#EF4444",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{"\u2715"} Clear all</button>}
-        </div>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:10,marginBottom:10}}>
-        <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Match Level</label>
-          <select value={filters.matchLevel} onChange={e=>setFilters(f=>({...f,matchLevel:e.target.value}))} className="f-input"><option value="">All levels</option><option value="Excellent">Excellent</option><option value="Good">Good</option><option value="Fair">Fair</option><option value="Poor">Poor</option></select></div>
-        <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Gender</label>
-          <select value={filters.gender} onChange={e=>setFilters(f=>({...f,gender:e.target.value}))} className="f-input"><option value="">All genders</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
-        <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Country</label>
-          <select value={filters.country} onChange={e=>setFilters(f=>({...f,country:e.target.value}))} className="f-input"><option value="">All countries</option>{countries.map(c=><option key={c} value={c}>{c}</option>)}</select></div>
-        <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Age Range</label>
-          <div style={{display:"flex",gap:5,alignItems:"center"}}><input className="f-input" type="number" value={filters.ageMin} onChange={e=>setFilters(f=>({...f,ageMin:e.target.value}))} placeholder="Min" style={{width:"50%"}}/><span style={{fontSize:11,color:"#94A3B8"}}>-</span><input className="f-input" type="number" value={filters.ageMax} onChange={e=>setFilters(f=>({...f,ageMax:e.target.value}))} placeholder="Max" style={{width:"50%"}}/></div></div>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>{"\uD83C\uDFE2"} Has Worked At</label>
-          <ChecklistDropdown label="companies" options={allCompanies} selected={selCos} onChange={v=>setFilters(f=>({...f,companies:v}))} placeholder={allCompanies.length===0?"(run analysis first)":"Select companies..."}/></div>
-        <div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>{"\uD83C\uDF93"} Studied At</label>
-          <ChecklistDropdown label="universities" options={allUniversities} selected={selUnis} onChange={v=>setFilters(f=>({...f,universities:v}))} placeholder={allUniversities.length===0?"(run analysis first)":"Select universities..."}/></div>
-      </div>
-      {activeCount>0&&(
-        <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:12,paddingTop:10,borderTop:"1px solid #EFF6FF"}}>
-          {filters.matchLevel&&<Chip label={"Level: "+filters.matchLevel} onRemove={()=>setFilters(f=>({...f,matchLevel:""}))}/>}
-          {filters.gender&&<Chip label={"Gender: "+filters.gender} onRemove={()=>setFilters(f=>({...f,gender:""}))}/>}
-          {filters.country&&<Chip label={"Country: "+filters.country} onRemove={()=>setFilters(f=>({...f,country:""}))}/>}
-          {(filters.ageMin||filters.ageMax)&&<Chip label={"Age: "+(filters.ageMin||"any")+"-"+(filters.ageMax||"any")} onRemove={()=>setFilters(f=>({...f,ageMin:"",ageMax:""}))}/>}
-          {selCos.map(c=><Chip key={c} label={"\uD83C\uDFE2 "+c} onRemove={()=>setFilters(f=>({...f,companies:f.companies.filter(x=>x!==c)}))}/>)}
-          {selUnis.map(u=><Chip key={u} label={"\uD83C\uDF93 "+u} onRemove={()=>setFilters(f=>({...f,universities:f.universities.filter(x=>x!==u)}))}/>)}
-        </div>
-      )}
-    </div>
-  );
-}
-
+// ── Filter/Sort ──────────────────────────────────────────
 function applyFiltersAndSort(results,filters,sortBy){
   let r=results.filter(c=>!c._imageOnly);
-  if(filters.matchLevel) r=r.filter(c=>c.match_level===filters.matchLevel);
-  if(filters.gender) r=r.filter(c=>c.gender===filters.gender);
+  if(filters.matchLevel)r=r.filter(c=>c.match_level===filters.matchLevel);
+  if(filters.gender)r=r.filter(c=>c.gender===filters.gender);
   if(filters.country){const q=filters.country.toLowerCase();r=r.filter(c=>(c.nationality||"").toLowerCase().includes(q)||(c.location||"").toLowerCase().includes(q));}
-  if(filters.ageMin) r=r.filter(c=>c.age!=null&&c.age>=parseInt(filters.ageMin));
-  if(filters.ageMax) r=r.filter(c=>c.age!=null&&c.age<=parseInt(filters.ageMax));
-  if(filters.companies?.length>0) r=r.filter(c=>filters.companies.some(fc=>(c.companies||[]).some(co=>co.toLowerCase()===fc.toLowerCase())));
-  if(filters.universities?.length>0) r=r.filter(c=>filters.universities.some(fu=>(c.universities||[]).some(u=>u.toLowerCase()===fu.toLowerCase())));
-  if(sortBy==="name") r.sort((a,b)=>a.candidate_name.localeCompare(b.candidate_name));
-  else if(sortBy==="age") r.sort((a,b)=>(a.age??999)-(b.age??999));
-  else if(sortBy==="age_desc") r.sort((a,b)=>(b.age??0)-(a.age??0));
-  else if(sortBy==="exp") r.sort((a,b)=>(b.years_experience??0)-(a.years_experience??0));
-  else if(sortBy==="me_exp") r.sort((a,b)=>(b.me_experience??0)-(a.me_experience??0));
+  if(filters.ageMin)r=r.filter(c=>c.age!=null&&c.age>=parseInt(filters.ageMin));
+  if(filters.ageMax)r=r.filter(c=>c.age!=null&&c.age<=parseInt(filters.ageMax));
+  if(filters.companies&&filters.companies.length>0)r=r.filter(c=>filters.companies.some(fc=>(c.companies||[]).some(co=>co.toLowerCase()===fc.toLowerCase())));
+  if(filters.universities&&filters.universities.length>0)r=r.filter(c=>filters.universities.some(fu=>(c.universities||[]).some(u=>u.toLowerCase()===fu.toLowerCase())));
+  if(sortBy==="name")r.sort((a,b)=>a.candidate_name.localeCompare(b.candidate_name));
+  else if(sortBy==="age")r.sort((a,b)=>(a.age!=null?a.age:999)-(b.age!=null?b.age:999));
+  else if(sortBy==="age_desc")r.sort((a,b)=>(b.age!=null?b.age:0)-(a.age!=null?a.age:0));
+  else if(sortBy==="exp")r.sort((a,b)=>(b.years_experience||0)-(a.years_experience||0));
+  else if(sortBy==="me_exp")r.sort((a,b)=>(b.me_experience||0)-(a.me_experience||0));
   else r.sort((a,b)=>b.score-a.score);
   return r;
 }
 
-/* ── Candidate Card (shared between main + extra) ─── */
-function CandidateDetail({c,showCV}){
-  const[tab,setTab]=useState("review");
-  const ms=MATCH[c.match_level]||MATCH.Poor;
-  return(<div style={{borderTop:"1.5px solid #DBEAFE"}}>
-    <div style={{display:"flex",background:"#F0F7FF",borderBottom:"1px solid #DBEAFE"}}>
-      {[["review","\u2B50","AI Review"],["profile","\uD83D\uDC64","Profile"],showCV&&["cv","\uD83E\uDEAA","View CV"]].filter(Boolean).map(([t,ic,lbl])=>(
-        <button key={t} onClick={()=>setTab(t)} style={{flex:1,padding:"10px",background:tab===t?"white":"transparent",border:"none",borderBottom:tab===t?"2px solid #2563EB":"2px solid transparent",color:tab===t?"#1D4ED8":"#64748B",fontSize:12,fontWeight:tab===t?700:400,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:5,fontFamily:"inherit"}}>{ic} {lbl}</button>
-      ))}
-    </div>
-    {tab==="review"&&<div style={{padding:"18px"}}>
-      <div style={{display:"flex",gap:16,alignItems:"center",marginBottom:14,padding:"14px",background:"linear-gradient(135deg,#EFF6FF,#F0F7FF)",borderRadius:11,border:"1px solid #BFDBFE"}}>
-        <Ring score={c.score} size={88}/>
-        <div style={{flex:1}}>
-          <div style={{fontSize:17,fontWeight:800,color:"#0D2171",marginBottom:2}}>{c.candidate_name}</div>
-          <div style={{fontSize:12,color:"#3B82F6",marginBottom:8}}>{c.current_role}{c.years_experience!=null?" \u00B7 "+c.years_experience+" yrs":""}</div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:4}}>{c.key_skills?.map((s,si)=>(<span key={si} style={{fontSize:10,padding:"2px 9px",background:"white",color:"#1D4ED8",borderRadius:20,border:"1.5px solid #BFDBFE",fontWeight:600}}>{s}</span>))}</div>
-        </div>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
-        {c.top_strengths?.length>0&&<div style={{padding:"12px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0"}}><div style={{fontSize:10,fontWeight:700,color:"#065F46",textTransform:"uppercase",letterSpacing:1.5,marginBottom:8}}>Strengths</div>{c.top_strengths.map((s,si)=>(<div key={si} style={{display:"flex",gap:6,alignItems:"flex-start",marginBottom:6}}><span style={{color:"#10B981",fontSize:12,flexShrink:0}}>{"\u2713"}</span><span style={{fontSize:12,color:"#065F46",lineHeight:1.5}}>{s}</span></div>))}</div>}
-        {c.concerns?.length>0
-          ?<div style={{padding:"12px",background:"#FFFBEB",borderRadius:9,border:"1px solid #FDE68A"}}><div style={{fontSize:10,fontWeight:700,color:"#78350F",textTransform:"uppercase",letterSpacing:1.5,marginBottom:8}}>Watch Out</div>{c.concerns.map((cn,ci)=>(<div key={ci} style={{display:"flex",gap:6,alignItems:"flex-start",marginBottom:6}}><span style={{color:"#F59E0B",fontSize:12,flexShrink:0}}>{"\u26A0"}</span><span style={{fontSize:12,color:"#78350F",lineHeight:1.5}}>{cn}</span></div>))}</div>
-          :<div style={{padding:"12px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0",display:"flex",alignItems:"center",justifyContent:"center",gap:7,color:"#065F46",fontSize:12}}>{"\u2705"} No concerns noted</div>
-        }
-      </div>
-      <div style={{padding:"12px 14px",background:"#EFF6FF",borderRadius:9,border:"1px solid #BFDBFE",borderLeft:"4px solid #2563EB"}}><div style={{fontSize:10,fontWeight:700,color:"#1D4ED8",textTransform:"uppercase",letterSpacing:1.5,marginBottom:6}}>AI Summary</div><p style={{fontSize:13,color:"#0F172A",lineHeight:1.8,margin:0}}>{c.summary}</p></div>
-    </div>}
-    {tab==="profile"&&<div style={{padding:"18px"}}>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
-        {[["\uD83C\uDF0D","Nationality",c.nationality||"\u2014"],["\uD83D\uDCCD","Location",c.location||"\u2014"],["\uD83C\uDF82","Age",c.age!=null?c.age+" years old":"\u2014"],["\uD83D\uDC64","Gender",c.gender||"\u2014"],["\uD83D\uDCC5","Experience",c.years_experience!=null?c.years_experience+" years":"\u2014"],["\uD83C\uDDE6\uD83C\uDDEA","ME/UAE Exp",c.me_experience!=null?c.me_experience+" years":"\u2014"],["\uD83C\uDF93","Education",c.education||"\u2014"]].map(([ic,label,val])=>(
-          <div key={label} style={{padding:"11px 13px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE"}}><div style={{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:4}}>{ic} {label}</div><div style={{fontSize:13,fontWeight:600,color:val==="\u2014"?"#94A3B8":"#0D2171"}}>{val}</div></div>
-        ))}
-      </div>
-      {c.companies?.length>0&&<div style={{padding:"12px 14px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE",marginBottom:10}}><div style={{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>{"\uD83C\uDFE2"} Companies</div><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.companies.map((co,ci)=>(<span key={ci} style={{fontSize:11,padding:"3px 10px",background:"white",color:"#0D2171",borderRadius:20,border:"1.5px solid #DBEAFE",fontWeight:600}}>{co}</span>))}</div></div>}
-      {c.universities?.length>0&&<div style={{padding:"12px 14px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0",marginBottom:10}}><div style={{fontSize:10,fontWeight:700,color:"#166534",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>{"\uD83C\uDF93"} Universities</div><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.universities.map((u,ui)=>(<span key={ui} style={{fontSize:11,padding:"3px 10px",background:"white",color:"#166534",borderRadius:20,border:"1.5px solid #BBF7D0",fontWeight:600}}>{u}</span>))}</div></div>}
-      {c.me_companies?.length>0&&<div style={{padding:"12px 14px",background:"#FFF7ED",borderRadius:9,border:"1px solid #FED7AA",marginBottom:10}}><div style={{fontSize:10,fontWeight:700,color:"#C2410C",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>{"\uD83C\uDDE6\uD83C\uDDEA"} Middle East Experience</div><div style={{display:"flex",flexDirection:"column",gap:6}}>{c.me_companies.map((mc,mi)=>(<div key={mi} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"7px 10px",background:"white",borderRadius:7,border:"1px solid #FED7AA"}}><span style={{fontSize:12,fontWeight:600,color:"#0D2171"}}>{mc.name}</span><div style={{display:"flex",gap:6,alignItems:"center"}}>{mc.country&&<span style={{fontSize:10,padding:"2px 7px",background:"#FFF7ED",color:"#C2410C",borderRadius:20,border:"1px solid #FED7AA",fontWeight:600}}>{mc.country}</span>}{mc.years!=null&&<span style={{fontSize:10,color:"#94A3B8",fontWeight:500}}>{mc.years}yr</span>}</div></div>))}</div></div>}
-      {c.languages?.length>0&&<div style={{padding:"12px 14px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE"}}><div style={{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>{"\uD83D\uDDE3\uFE0F"} Languages</div><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.languages.map((l,li)=>(<span key={li} style={{fontSize:11,padding:"3px 10px",background:"white",color:"#0891B2",borderRadius:20,border:"1.5px solid #BAE6FD",fontWeight:600}}>{l}</span>))}</div></div>}
-    </div>}
-    {tab==="cv"&&showCV&&<div style={{padding:"14px 18px"}}><CVViewer candidate={c}/></div>}
-  </div>);
+function FilterBar({results,filters,setFilters,sortBy,setSortBy}){
+  const countries=useMemo(()=>{const s=new Set();results.forEach(r=>{if(r.nationality)s.add(r.nationality);if(r.location)s.add(r.location);});return[...s].sort();},[results]);
+  const allCompanies=useMemo(()=>{const s=new Set();results.forEach(r=>(r.companies||[]).forEach(c=>c&&s.add(c)));return[...s].sort();},[results]);
+  const allUnis=useMemo(()=>{const s=new Set();results.forEach(r=>(r.universities||[]).forEach(u=>u&&s.add(u)));return[...s].sort();},[results]);
+  const selCos=filters.companies||[],selUnis=filters.universities||[];
+  const activeCount=[filters.gender,filters.country,selCos.length>0,selUnis.length>0,filters.ageMin||filters.ageMax,filters.matchLevel].filter(Boolean).length;
+  const clearAll=()=>setFilters({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});
+  return R("div",{style:{background:"white",border:"1.5px solid #DBEAFE",borderRadius:12,padding:"14px 16px",marginBottom:14,maxWidth:820}},
+    R("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:8}},
+      R("div",{style:{display:"flex",alignItems:"center",gap:8}},
+        R("span",{style:{fontSize:14}},"🔍"),
+        R("span",{style:{fontSize:13,fontWeight:700,color:"#0D2171"}},"Filter & Sort"),
+        activeCount>0&&R("span",{style:{fontSize:11,fontWeight:700,padding:"2px 8px",background:"#2563EB",color:"white",borderRadius:20}},activeCount+" active")
+      ),
+      R("div",{style:{display:"flex",gap:8,alignItems:"center"}},
+        R("select",{value:sortBy,onChange:e=>setSortBy(e.target.value),style:{padding:"5px 10px",borderRadius:7,border:"1.5px solid #DBEAFE",fontSize:12,fontFamily:"inherit",color:"#0D2171",background:"white",cursor:"pointer"}},
+          R("option",{value:"score"},"Sort: Best Score"),R("option",{value:"name"},"Sort: Name A-Z"),
+          R("option",{value:"age"},"Sort: Youngest First"),R("option",{value:"age_desc"},"Sort: Oldest First"),
+          R("option",{value:"exp"},"Sort: Most Experience"),R("option",{value:"me_exp"},"Sort: Most ME/UAE Exp")
+        ),
+        activeCount>0&&R("button",{onClick:clearAll,style:{padding:"5px 11px",borderRadius:7,border:"1.5px solid #FECACA",background:"#FFF1F1",color:"#EF4444",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}},"× Clear all")
+      )
+    ),
+    R("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:10,marginBottom:10}},
+      R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"Match Level"),
+        R("select",{value:filters.matchLevel,onChange:e=>setFilters(f=>({...f,matchLevel:e.target.value})),className:"f-input"},
+          R("option",{value:""},"All levels"),R("option",{value:"Excellent"},"Excellent"),R("option",{value:"Good"},"Good"),R("option",{value:"Fair"},"Fair"),R("option",{value:"Poor"},"Poor"))),
+      R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"Gender"),
+        R("select",{value:filters.gender,onChange:e=>setFilters(f=>({...f,gender:e.target.value})),className:"f-input"},
+          R("option",{value:""},"All genders"),R("option",{value:"Male"},"Male"),R("option",{value:"Female"},"Female"))),
+      R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"Country"),
+        R("select",{value:filters.country,onChange:e=>setFilters(f=>({...f,country:e.target.value})),className:"f-input"},
+          R("option",{value:""},"All countries"),...countries.map(c=>R("option",{key:c,value:c},c)))),
+      R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"Age Range"),
+        R("div",{style:{display:"flex",gap:5,alignItems:"center"}},
+          R("input",{className:"f-input",type:"number",value:filters.ageMin,onChange:e=>setFilters(f=>({...f,ageMin:e.target.value})),placeholder:"Min",style:{width:"50%"}}),
+          R("span",{style:{fontSize:11,color:"#94A3B8"}},"-"),
+          R("input",{className:"f-input",type:"number",value:filters.ageMax,onChange:e=>setFilters(f=>({...f,ageMax:e.target.value})),placeholder:"Max",style:{width:"50%"}})))
+    ),
+    R("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}},
+      R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"🏢 Has Worked At"),
+        R(ChecklistDropdown,{label:"companies",options:allCompanies,selected:selCos,onChange:v=>setFilters(f=>({...f,companies:v})),placeholder:allCompanies.length===0?"(run analysis first)":"Select companies..."})),
+      R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"🎓 Studied At"),
+        R(ChecklistDropdown,{label:"universities",options:allUnis,selected:selUnis,onChange:v=>setFilters(f=>({...f,universities:v})),placeholder:allUnis.length===0?"(run analysis first)":"Select universities..."}))
+    ),
+    activeCount>0&&R("div",{style:{display:"flex",flexWrap:"wrap",gap:6,marginTop:12,paddingTop:10,borderTop:"1px solid #EFF6FF"}},
+      filters.matchLevel&&R(Chip,{label:"Level: "+filters.matchLevel,onRemove:()=>setFilters(f=>({...f,matchLevel:""}))}),
+      filters.gender&&R(Chip,{label:"Gender: "+filters.gender,onRemove:()=>setFilters(f=>({...f,gender:""}))}),
+      filters.country&&R(Chip,{label:"Country: "+filters.country,onRemove:()=>setFilters(f=>({...f,country:""}))}),
+      (filters.ageMin||filters.ageMax)&&R(Chip,{label:"Age: "+(filters.ageMin||"any")+"-"+(filters.ageMax||"any"),onRemove:()=>setFilters(f=>({...f,ageMin:"",ageMax:""}))}),
+      selCos.map(c=>R(Chip,{key:c,label:"🏢 "+c,onRemove:()=>setFilters(f=>({...f,companies:f.companies.filter(x=>x!==c)}))})),
+      selUnis.map(u=>R(Chip,{key:u,label:"🎓 "+u,onRemove:()=>setFilters(f=>({...f,universities:f.universities.filter(x=>x!==u)}))}))
+    )
+  );
 }
 
-/* ── Share: generate standalone HTML ─── */
+// ── Candidate Detail Panel ───────────────────────────────
+function CandidateDetail({c,showCV}){
+  const[tab,setTab]=useState("review");
+  return R("div",{style:{borderTop:"1.5px solid #DBEAFE"}},
+    R("div",{style:{display:"flex",background:"#F0F7FF",borderBottom:"1px solid #DBEAFE"}},
+      ...[["review","⭐","AI Review"],["profile","👤","Profile"],showCV&&["cv","🪪","View CV"]].filter(Boolean).map(([t,ic,lbl])=>
+        R("button",{key:t,onClick:()=>setTab(t),style:{flex:1,padding:"10px",background:tab===t?"white":"transparent",border:"none",borderBottom:tab===t?"2px solid #2563EB":"2px solid transparent",color:tab===t?"#1D4ED8":"#64748B",fontSize:12,fontWeight:tab===t?700:400,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:5,fontFamily:"inherit"}},ic+" "+lbl)
+      )
+    ),
+    tab==="review"&&R("div",{style:{padding:"18px"}},
+      R("div",{style:{display:"flex",gap:16,alignItems:"center",marginBottom:14,padding:"14px",background:"linear-gradient(135deg,#EFF6FF,#F0F7FF)",borderRadius:11,border:"1px solid #BFDBFE"}},
+        R(Ring,{score:c.score,size:88}),
+        R("div",{style:{flex:1}},
+          R("div",{style:{fontSize:17,fontWeight:800,color:"#0D2171",marginBottom:2}},c.candidate_name),
+          R("div",{style:{fontSize:12,color:"#3B82F6",marginBottom:8}},c.current_role+(c.years_experience!=null?" · "+c.years_experience+" yrs":"")),
+          R("div",{style:{display:"flex",flexWrap:"wrap",gap:4}},...(c.key_skills||[]).map((s,i)=>R("span",{key:i,style:{fontSize:10,padding:"2px 9px",background:"white",color:"#1D4ED8",borderRadius:20,border:"1.5px solid #BFDBFE",fontWeight:600}},s)))
+        )
+      ),
+      R("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}},
+        c.top_strengths&&c.top_strengths.length>0&&R("div",{style:{padding:"12px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0"}},
+          R("div",{style:{fontSize:10,fontWeight:700,color:"#065F46",textTransform:"uppercase",letterSpacing:1.5,marginBottom:8}},"Strengths"),
+          ...c.top_strengths.map((s,i)=>R("div",{key:i,style:{display:"flex",gap:6,alignItems:"flex-start",marginBottom:6}},R("span",{style:{color:"#10B981",fontSize:12,flexShrink:0}},"✓"),R("span",{style:{fontSize:12,color:"#065F46",lineHeight:1.5}},s)))
+        ),
+        c.concerns&&c.concerns.length>0
+          ?R("div",{style:{padding:"12px",background:"#FFFBEB",borderRadius:9,border:"1px solid #FDE68A"}},
+              R("div",{style:{fontSize:10,fontWeight:700,color:"#78350F",textTransform:"uppercase",letterSpacing:1.5,marginBottom:8}},"Watch Out"),
+              ...c.concerns.map((cn,i)=>R("div",{key:i,style:{display:"flex",gap:6,alignItems:"flex-start",marginBottom:6}},R("span",{style:{color:"#F59E0B",fontSize:12,flexShrink:0}},"⚠"),R("span",{style:{fontSize:12,color:"#78350F",lineHeight:1.5}},cn)))
+            )
+          :R("div",{style:{padding:"12px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0",display:"flex",alignItems:"center",justifyContent:"center",gap:7,color:"#065F46",fontSize:12}},"✅ No concerns noted")
+      ),
+      R("div",{style:{padding:"12px 14px",background:"#EFF6FF",borderRadius:9,border:"1px solid #BFDBFE",borderLeft:"4px solid #2563EB"}},
+        R("div",{style:{fontSize:10,fontWeight:700,color:"#1D4ED8",textTransform:"uppercase",letterSpacing:1.5,marginBottom:6}},"AI Summary"),
+        R("p",{style:{fontSize:13,color:"#0F172A",lineHeight:1.8,margin:0}},c.summary)
+      )
+    ),
+    tab==="profile"&&R("div",{style:{padding:"18px"}},
+      R("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}},
+        ...[ ["🌍","Nationality",c.nationality||"—"],["📍","Location",c.location||"—"],
+             ["🎂","Age",c.age!=null?c.age+" years old":"—"],["👤","Gender",c.gender||"—"],
+             ["📅","Experience",c.years_experience!=null?c.years_experience+" years":"—"],
+             ["🇦🇪","ME/UAE Exp",c.me_experience!=null?c.me_experience+" years":"—"],
+             ["🎓","Education",c.education||"—"] ].map(([ic,label,val])=>
+          R("div",{key:label,style:{padding:"11px 13px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE"}},
+            R("div",{style:{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:4}},ic+" "+label),
+            R("div",{style:{fontSize:13,fontWeight:600,color:val==="—"?"#94A3B8":"#0D2171"}},val)
+          )
+        )
+      ),
+      c.companies&&c.companies.length>0&&R("div",{style:{padding:"12px 14px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE",marginBottom:10}},
+        R("div",{style:{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}},"🏢 Companies"),
+        R("div",{style:{display:"flex",flexWrap:"wrap",gap:5}},...c.companies.map((co,i)=>R("span",{key:i,style:{fontSize:11,padding:"3px 10px",background:"white",color:"#0D2171",borderRadius:20,border:"1.5px solid #DBEAFE",fontWeight:600}},co)))
+      ),
+      c.universities&&c.universities.length>0&&R("div",{style:{padding:"12px 14px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0",marginBottom:10}},
+        R("div",{style:{fontSize:10,fontWeight:700,color:"#166534",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}},"🎓 Universities"),
+        R("div",{style:{display:"flex",flexWrap:"wrap",gap:5}},...c.universities.map((u,i)=>R("span",{key:i,style:{fontSize:11,padding:"3px 10px",background:"white",color:"#166534",borderRadius:20,border:"1.5px solid #BBF7D0",fontWeight:600}},u)))
+      ),
+      c.me_companies&&c.me_companies.length>0&&R("div",{style:{padding:"12px 14px",background:"#FFF7ED",borderRadius:9,border:"1px solid #FED7AA",marginBottom:10}},
+        R("div",{style:{fontSize:10,fontWeight:700,color:"#C2410C",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}},"🇦🇪 Middle East Experience"),
+        R("div",{style:{display:"flex",flexDirection:"column",gap:6}},
+          ...c.me_companies.map((mc,i)=>R("div",{key:i,style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"7px 10px",background:"white",borderRadius:7,border:"1px solid #FED7AA"}},
+            R("span",{style:{fontSize:12,fontWeight:600,color:"#0D2171"}},mc.name),
+            R("div",{style:{display:"flex",gap:6,alignItems:"center"}},
+              mc.country&&R("span",{style:{fontSize:10,padding:"2px 7px",background:"#FFF7ED",color:"#C2410C",borderRadius:20,border:"1px solid #FED7AA",fontWeight:600}},mc.country),
+              mc.years!=null&&R("span",{style:{fontSize:10,color:"#94A3B8",fontWeight:500}},mc.years+"yr")
+            )
+          ))
+        )
+      ),
+      c.languages&&c.languages.length>0&&R("div",{style:{padding:"12px 14px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE"}},
+        R("div",{style:{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}},"🗣️ Languages"),
+        R("div",{style:{display:"flex",flexWrap:"wrap",gap:5}},...c.languages.map((l,i)=>R("span",{key:i,style:{fontSize:11,padding:"3px 10px",background:"white",color:"#0891B2",borderRadius:20,border:"1.5px solid #BAE6FD",fontWeight:600}},l)))
+      )
+    ),
+    tab==="cv"&&showCV&&R("div",{style:{padding:"14px 18px"}},R(CVViewer,{candidate:c}))
+  );
+}
+
+// ── Share HTML generator (no Babel, real UTF-8 emoji) ────
 function generateShareHTML(results,jobTitle){
-  // Strip file objects — only keep data fields
-  const shareData=results.filter(r=>!r._imageOnly).map(r=>{
-    const {_fileObj,...rest}=r;return rest;
-  });
+  const shareData=results.filter(r=>!r._imageOnly).map(r=>{const{_fileObj,...rest}=r;return rest;});
   const dataJSON=JSON.stringify(shareData);
-  return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>CV Screening Results \u2014 '+jobTitle.replace(/"/g,'&quot;')+'</title><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"><\/script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"><\/script><script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"><\/script><style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html,body,#root{height:100%;overflow:auto}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#EEF4FF;color:#0F172A}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#BFDBFE;border-radius:4px}.f-input{width:100%;padding:8px 11px;border:1.5px solid #DBEAFE;border-radius:8px;font-size:12px;font-family:inherit;color:#0F172A;background:white;outline:none}.f-input:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,0.1)}</style></head><body><div id="root"></div><script>window.__SHARE_DATA__='+dataJSON+';window.__JOB_TITLE__='+JSON.stringify(jobTitle)+';<\/script><script type="text/babel">const{useState,useMemo,useRef,useEffect}=React;const LOGO="'+LOGO+'";const MATCH={Excellent:{bg:"#DCFCE7",c:"#14532D",dot:"#10B981"},Good:{bg:"#DBEAFE",c:"#1E3A8A",dot:"#3B82F6"},Fair:{bg:"#FEF9C3",c:"#713F12",dot:"#F59E0B"},Poor:{bg:"#FEE2E2",c:"#7F1D1D",dot:"#EF4444"}};const RANKS=[{badge:"Top Match",border:"#F59E0B",hbg:"linear-gradient(135deg,#FFFBEB,#FEF3C7)",ac:"#92400E",medal:"\\u{1F947}"},{badge:"2nd Place",border:"#94A3B8",hbg:"#F8FAFC",ac:"#475569",medal:"\\u{1F948}"},{badge:"3rd Place",border:"#CD7F32",hbg:"#FFFAF5",ac:"#713F12",medal:"\\u{1F949}"}];function rankMeta(i){if(i<3)return RANKS[i];return{badge:"Rank #"+(i+1),border:"#DBEAFE",hbg:"white",ac:"#3B82F6",medal:"#"+(i+1)};}function Ring({score,size=90}){if(score==null)return null;const r=size/2-10,circ=2*Math.PI*r,dash=(score/100)*circ;const col=score>=75?"#10B981":score>=50?"#F59E0B":"#EF4444";const tr=score>=75?"#D1FAE5":score>=50?"#FEF3C7":"#FEE2E2";return(<svg width={size} height={size} style={{display:"block",flexShrink:0}}><circle cx={size/2} cy={size/2} r={r} fill="none" stroke={tr} strokeWidth="8"/><circle cx={size/2} cy={size/2} r={r} fill="none" stroke={col} strokeWidth="8" strokeDasharray={dash+" "+circ} strokeLinecap="round" style={{transform:"rotate(-90deg)",transformOrigin:"center"}}/><text x={size/2} y={size/2-7} textAnchor="middle" dominantBaseline="central" fill={col} fontSize="20" fontWeight="700">{score}</text><text x={size/2} y={size/2+12} textAnchor="middle" fill={col} fontSize="10" opacity="0.6">/100</text></svg>);}function MiniRing({score,size=50}){if(score==null)return null;const r=size/2-6,circ=2*Math.PI*r,dash=(score/100)*circ;const col=score>=75?"#10B981":score>=50?"#F59E0B":"#EF4444";const tr=score>=75?"#DCFCE7":score>=50?"#FEF9C3":"#FEE2E2";return(<svg width={size} height={size} style={{display:"block",flexShrink:0}}><circle cx={size/2} cy={size/2} r={r} fill="none" stroke={tr} strokeWidth="5.5"/><circle cx={size/2} cy={size/2} r={r} fill="none" stroke={col} strokeWidth="5.5" strokeDasharray={dash+" "+circ} strokeLinecap="round" style={{transform:"rotate(-90deg)",transformOrigin:"center"}}/><text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central" fill={col} fontSize="13" fontWeight="700">{score}</text></svg>);}function Chip({label,onRemove}){return(<span style={{display:"inline-flex",alignItems:"center",gap:5,fontSize:11,fontWeight:600,padding:"3px 10px",background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,border:"1px solid #BFDBFE"}}>{label}<button onClick={onRemove} style={{background:"none",border:"none",cursor:"pointer",color:"#93C5FD",padding:0,fontSize:12,lineHeight:1,fontFamily:"inherit"}}>\\u2715</button></span>);}function ChecklistDropdown({label,options,selected,onChange,placeholder}){const[open,setOpen]=useState(false);const[search,setSearch]=useState("");const[rect,setRect]=useState(null);const btnRef=useRef();const dropRef=useRef();useEffect(()=>{if(!open)return;const update=()=>{if(btnRef.current)setRect(btnRef.current.getBoundingClientRect());};update();const handler=e=>{if(btnRef.current&&!btnRef.current.contains(e.target)&&dropRef.current&&!dropRef.current.contains(e.target)){setOpen(false);setSearch("");}};document.addEventListener("mousedown",handler);window.addEventListener("scroll",update,true);return()=>{document.removeEventListener("mousedown",handler);window.removeEventListener("scroll",update,true);};},[open]);const filtered=options.filter(o=>o.toLowerCase().includes(search.toLowerCase()));const toggle=o=>onChange(selected.includes(o)?selected.filter(x=>x!==o):[...selected,o]);const btnLabel=selected.length===0?placeholder:selected.length===1?selected[0]:selected.length+" selected";return(<div style={{position:"relative",width:"100%"}}><button ref={btnRef} className="f-input" onClick={()=>setOpen(v=>!v)} style={{cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",gap:6,textAlign:"left",whiteSpace:"nowrap",overflow:"hidden",borderColor:open?"#2563EB":"#DBEAFE"}}><span style={{overflow:"hidden",textOverflow:"ellipsis",flex:1,minWidth:0}}>{btnLabel}</span>{selected.length>0&&<span onPointerDown={e=>{e.stopPropagation();e.preventDefault();onChange([]);setOpen(false);}} style={{background:"#DBEAFE",color:"#1D4ED8",borderRadius:20,padding:"1px 7px",fontSize:10,fontWeight:700,flexShrink:0,cursor:"pointer"}}>\\u2715 {selected.length}</span>}<span style={{flexShrink:0,color:"#94A3B8",fontSize:10}}>{open?"\\u25B2":"\\u25BC"}</span></button>{open&&rect&&(<div ref={dropRef} style={{position:"fixed",top:rect.bottom+4,left:rect.left,width:rect.width,background:"white",border:"1.5px solid #DBEAFE",borderRadius:9,boxShadow:"0 8px 32px rgba(37,99,235,0.18)",zIndex:99999,maxHeight:240,overflowY:"auto"}}><div style={{position:"sticky",top:0,background:"white",borderBottom:"1px solid #EFF6FF",padding:"6px 8px"}}><input style={{width:"100%",padding:"6px 10px",border:"1.5px solid #DBEAFE",borderRadius:7,fontSize:12,fontFamily:"inherit",outline:"none",color:"#0F172A"}} value={search} onChange={e=>setSearch(e.target.value)} placeholder={"Search "+label.toLowerCase()+"..."} onClick={e=>e.stopPropagation()} autoFocus/></div>{filtered.length===0&&<div style={{padding:14,fontSize:12,color:"#94A3B8",textAlign:"center"}}>No matches</div>}{filtered.map(o=>{const checked=selected.includes(o);return(<div key={o} onClick={()=>toggle(o)} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",cursor:"pointer",background:checked?"#EFF6FF":"white",borderBottom:"1px solid #F8FAFC"}}><div style={{width:16,height:16,borderRadius:4,border:"2px solid "+(checked?"#2563EB":"#CBD5E1"),background:checked?"#2563EB":"white",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{checked&&<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}</div><span style={{fontSize:12,color:"#0F172A",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:checked?600:400}}>{o}</span></div>);})}</div>)}</div>);}function applyFiltersAndSort(results,filters,sortBy){let r=[...results];if(filters.matchLevel)r=r.filter(c=>c.match_level===filters.matchLevel);if(filters.gender)r=r.filter(c=>c.gender===filters.gender);if(filters.country){const q=filters.country.toLowerCase();r=r.filter(c=>(c.nationality||"").toLowerCase().includes(q)||(c.location||"").toLowerCase().includes(q));}if(filters.ageMin)r=r.filter(c=>c.age!=null&&c.age>=parseInt(filters.ageMin));if(filters.ageMax)r=r.filter(c=>c.age!=null&&c.age<=parseInt(filters.ageMax));if(filters.companies?.length>0)r=r.filter(c=>filters.companies.some(fc=>(c.companies||[]).some(co=>co.toLowerCase()===fc.toLowerCase())));if(filters.universities?.length>0)r=r.filter(c=>filters.universities.some(fu=>(c.universities||[]).some(u=>u.toLowerCase()===fu.toLowerCase())));if(sortBy==="name")r.sort((a,b)=>a.candidate_name.localeCompare(b.candidate_name));else if(sortBy==="age")r.sort((a,b)=>(a.age??999)-(b.age??999));else if(sortBy==="age_desc")r.sort((a,b)=>(b.age??0)-(a.age??0));else if(sortBy==="exp")r.sort((a,b)=>(b.years_experience??0)-(a.years_experience??0));else if(sortBy==="me_exp")r.sort((a,b)=>(b.me_experience??0)-(a.me_experience??0));else r.sort((a,b)=>b.score-a.score);return r;}function FilterBar({results,filters,setFilters,sortBy,setSortBy}){const countries=useMemo(()=>{const s=new Set();results.forEach(r=>{if(r.nationality)s.add(r.nationality);if(r.location)s.add(r.location);});return[...s].sort();},[results]);const allCompanies=useMemo(()=>{const s=new Set();results.forEach(r=>(r.companies||[]).forEach(c=>c&&s.add(c)));return[...s].sort();},[results]);const allUniversities=useMemo(()=>{const s=new Set();results.forEach(r=>(r.universities||[]).forEach(u=>u&&s.add(u)));return[...s].sort();},[results]);const selCos=filters.companies||[];const selUnis=filters.universities||[];const activeCount=[filters.gender,filters.country,selCos.length>0,selUnis.length>0,filters.ageMin||filters.ageMax,filters.matchLevel].filter(Boolean).length;const clearAll=()=>setFilters({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});return(<div style={{background:"white",border:"1.5px solid #DBEAFE",borderRadius:12,padding:"14px 16px",marginBottom:14}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:8}}><div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:14}}>\\uD83D\\uDD0D</span><span style={{fontSize:13,fontWeight:700,color:"#0D2171"}}>Filter & Sort</span>{activeCount>0&&<span style={{fontSize:11,fontWeight:700,padding:"2px 8px",background:"#2563EB",color:"white",borderRadius:20}}>{activeCount} active</span>}</div><div style={{display:"flex",gap:8,alignItems:"center"}}><select value={sortBy} onChange={e=>setSortBy(e.target.value)} style={{padding:"5px 10px",borderRadius:7,border:"1.5px solid #DBEAFE",fontSize:12,fontFamily:"inherit",color:"#0D2171",background:"white",cursor:"pointer"}}><option value="score">Sort: Best Score</option><option value="name">Sort: Name A-Z</option><option value="age">Sort: Youngest First</option><option value="age_desc">Sort: Oldest First</option><option value="exp">Sort: Most Experience</option><option value="me_exp">Sort: Most ME/UAE Exp</option></select>{activeCount>0&&<button onClick={clearAll} style={{padding:"5px 11px",borderRadius:7,border:"1.5px solid #FECACA",background:"#FFF1F1",color:"#EF4444",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>\\u2715 Clear all</button>}</div></div><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:10,marginBottom:10}}><div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Match Level</label><select value={filters.matchLevel} onChange={e=>setFilters(f=>({...f,matchLevel:e.target.value}))} className="f-input"><option value="">All</option><option value="Excellent">Excellent</option><option value="Good">Good</option><option value="Fair">Fair</option><option value="Poor">Poor</option></select></div><div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Gender</label><select value={filters.gender} onChange={e=>setFilters(f=>({...f,gender:e.target.value}))} className="f-input"><option value="">All</option><option value="Male">Male</option><option value="Female">Female</option></select></div><div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Country</label><select value={filters.country} onChange={e=>setFilters(f=>({...f,country:e.target.value}))} className="f-input"><option value="">All</option>{countries.map(c=><option key={c} value={c}>{c}</option>)}</select></div><div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>Age Range</label><div style={{display:"flex",gap:5,alignItems:"center"}}><input className="f-input" type="number" value={filters.ageMin} onChange={e=>setFilters(f=>({...f,ageMin:e.target.value}))} placeholder="Min" style={{width:"50%"}}/><span style={{fontSize:11,color:"#94A3B8"}}>-</span><input className="f-input" type="number" value={filters.ageMax} onChange={e=>setFilters(f=>({...f,ageMax:e.target.value}))} placeholder="Max" style={{width:"50%"}}/></div></div></div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}><div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>\\uD83C\\uDFE2 Has Worked At</label><ChecklistDropdown label="companies" options={allCompanies} selected={selCos} onChange={v=>setFilters(f=>({...f,companies:v}))} placeholder="Select companies..."/></div><div><label style={{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}}>\\uD83C\\uDF93 Studied At</label><ChecklistDropdown label="universities" options={allUniversities} selected={selUnis} onChange={v=>setFilters(f=>({...f,universities:v}))} placeholder="Select universities..."/></div></div>{activeCount>0&&(<div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:12,paddingTop:10,borderTop:"1px solid #EFF6FF"}}>{filters.matchLevel&&<Chip label={"Level: "+filters.matchLevel} onRemove={()=>setFilters(f=>({...f,matchLevel:""}))}/>}{filters.gender&&<Chip label={"Gender: "+filters.gender} onRemove={()=>setFilters(f=>({...f,gender:""}))}/>}{filters.country&&<Chip label={"Country: "+filters.country} onRemove={()=>setFilters(f=>({...f,country:""}))}/>}{(filters.ageMin||filters.ageMax)&&<Chip label={"Age: "+(filters.ageMin||"any")+"-"+(filters.ageMax||"any")} onRemove={()=>setFilters(f=>({...f,ageMin:"",ageMax:""}))}/>}{selCos.map(c=><Chip key={c} label={"\\uD83C\\uDFE2 "+c} onRemove={()=>setFilters(f=>({...f,companies:f.companies.filter(x=>x!==c)}))}/>)}{selUnis.map(u=><Chip key={u} label={"\\uD83C\\uDF93 "+u} onRemove={()=>setFilters(f=>({...f,universities:f.universities.filter(x=>x!==u)}))}/>)}</div>)}</div>);}function App(){const results=window.__SHARE_DATA__;const jobTitle=window.__JOB_TITLE__;const[filters,setFilters]=useState({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});const[sortBy,setSortBy]=useState("score");const[openIdx,setOpen]=useState(null);const[tab,setTab]=useState("review");const displayed=useMemo(()=>applyFiltersAndSort(results,filters,sortBy),[results,filters,sortBy]);return(<div style={{maxWidth:900,margin:"0 auto",padding:"24px 20px"}}><div style={{display:"flex",alignItems:"center",gap:12,marginBottom:6}}><img src={LOGO} alt="Focal" style={{width:44,height:44,borderRadius:10}}/><div><div style={{fontSize:10,color:"#3B82F6",fontWeight:700,textTransform:"uppercase",letterSpacing:2}}>Shared Results</div><h2 style={{fontSize:20,fontWeight:800,color:"#0D2171"}}>CV Screening \\u2014 <span style={{color:"#2563EB"}}>{jobTitle}</span></h2></div></div><p style={{fontSize:12,color:"#64748B",marginBottom:16,marginLeft:56}}>{displayed.length} of {results.length} candidates shown \\u00B7 click any card to expand</p><FilterBar results={results} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy}/>{displayed.length===0&&<div style={{textAlign:"center",padding:"40px",background:"white",borderRadius:12,border:"1.5px solid #DBEAFE"}}><div style={{fontSize:32,marginBottom:10}}>\\uD83D\\uDD0D</div><div style={{fontSize:15,fontWeight:700,color:"#0D2171"}}>No candidates match your filters</div></div>}{displayed.map((c,i)=>{const rk=rankMeta(i);const ms=MATCH[c.match_level]||MATCH.Poor;const isOpen=openIdx===i;return(<div key={c._file+i} style={{background:"white",border:(i<3?"1.5px":"1px")+" solid "+(isOpen?"#2563EB":rk.border),borderRadius:12,overflow:"hidden",marginBottom:10,boxShadow:isOpen?"0 0 0 3px rgba(37,99,235,0.1)":"0 1px 4px rgba(59,130,246,0.07)"}}><div onClick={()=>{setOpen(v=>v===i?null:i);setTab("review");}} style={{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",cursor:"pointer",background:isOpen?"#F0F7FF":"transparent",userSelect:"none"}}><div style={{background:rk.hbg,border:"1px solid "+rk.border+"55",borderRadius:8,padding:"5px 8px",fontSize:11,fontWeight:700,color:rk.ac,flexShrink:0,textAlign:"center",minWidth:48,lineHeight:1.4}}>{rk.medal}<br/><span style={{fontSize:9}}>{rk.badge}</span></div><MiniRing score={c.score} size={52}/><div style={{flex:1,minWidth:0}}><div style={{display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:2}}><span style={{fontSize:15,fontWeight:700,color:"#0D2171"}}>{c.candidate_name}</span><span style={{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:20,background:ms.bg,color:ms.c,display:"inline-flex",alignItems:"center",gap:4}}><span style={{width:5,height:5,borderRadius:"50%",background:ms.dot,flexShrink:0}}/>{c.match_level}</span></div><div style={{display:"flex",flexWrap:"wrap",gap:6,fontSize:11,color:"#64748B"}}>{c.current_role&&<span>{c.current_role}</span>}{c.years_experience!=null&&<span style={{color:"#94A3B8"}}>\\u00B7 {c.years_experience}yr exp</span>}{c.age!=null&&<span style={{color:"#7C3AED",fontWeight:600}}>\\u00B7 Age {c.age}</span>}{(c.nationality||c.location)&&<span style={{color:"#0891B2"}}>\\u00B7 \\uD83C\\uDF0D {c.nationality||c.location}</span>}{c.gender&&<span style={{color:"#64748B"}}>\\u00B7 {c.gender==="Male"?"\\u2642":"\\u2640"} {c.gender}</span>}{c.me_experience>0&&<span style={{background:"#FFF7ED",color:"#C2410C",border:"1px solid #FED7AA",borderRadius:20,fontSize:10,fontWeight:700,padding:"1px 7px"}}>\\uD83C\\uDDE6\\uD83C\\uDDEA {c.me_experience}yr ME</span>}</div></div>{!isOpen&&c.key_skills?.length>0&&<div style={{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"flex-end",maxWidth:220}}>{c.key_skills.slice(0,3).map((s,si)=>(<span key={si} style={{fontSize:10,padding:"2px 8px",background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,border:"1px solid #BFDBFE",whiteSpace:"nowrap"}}>{s}</span>))}</div>}<span style={{fontSize:14,color:"#94A3B8",flexShrink:0}}>{isOpen?"\\u25B2":"\\u25BC"}</span></div>{isOpen&&<div style={{borderTop:"1.5px solid #DBEAFE"}}><div style={{display:"flex",background:"#F0F7FF",borderBottom:"1px solid #DBEAFE"}}>{[["review","\\u2B50","AI Review"],["profile","\\uD83D\\uDC64","Profile"]].map(([t,ic,lbl])=>(<button key={t} onClick={()=>setTab(t)} style={{flex:1,padding:"10px",background:tab===t?"white":"transparent",border:"none",borderBottom:tab===t?"2px solid #2563EB":"2px solid transparent",color:tab===t?"#1D4ED8":"#64748B",fontSize:12,fontWeight:tab===t?700:400,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:5,fontFamily:"inherit"}}>{ic} {lbl}</button>))}</div>{tab==="review"&&<div style={{padding:"18px"}}><div style={{display:"flex",gap:16,alignItems:"center",marginBottom:14,padding:"14px",background:"linear-gradient(135deg,#EFF6FF,#F0F7FF)",borderRadius:11,border:"1px solid #BFDBFE"}}><Ring score={c.score} size={88}/><div style={{flex:1}}><div style={{fontSize:17,fontWeight:800,color:"#0D2171",marginBottom:2}}>{c.candidate_name}</div><div style={{fontSize:12,color:"#3B82F6",marginBottom:8}}>{c.current_role}{c.years_experience!=null?" \\u00B7 "+c.years_experience+" yrs":""}</div><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{c.key_skills?.map((s,si)=>(<span key={si} style={{fontSize:10,padding:"2px 9px",background:"white",color:"#1D4ED8",borderRadius:20,border:"1.5px solid #BFDBFE",fontWeight:600}}>{s}</span>))}</div></div></div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>{c.top_strengths?.length>0&&<div style={{padding:"12px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0"}}><div style={{fontSize:10,fontWeight:700,color:"#065F46",textTransform:"uppercase",letterSpacing:1.5,marginBottom:8}}>Strengths</div>{c.top_strengths.map((s,si)=>(<div key={si} style={{display:"flex",gap:6,alignItems:"flex-start",marginBottom:6}}><span style={{color:"#10B981",fontSize:12,flexShrink:0}}>\\u2713</span><span style={{fontSize:12,color:"#065F46",lineHeight:1.5}}>{s}</span></div>))}</div>}{c.concerns?.length>0?<div style={{padding:"12px",background:"#FFFBEB",borderRadius:9,border:"1px solid #FDE68A"}}><div style={{fontSize:10,fontWeight:700,color:"#78350F",textTransform:"uppercase",letterSpacing:1.5,marginBottom:8}}>Watch Out</div>{c.concerns.map((cn,ci)=>(<div key={ci} style={{display:"flex",gap:6,alignItems:"flex-start",marginBottom:6}}><span style={{color:"#F59E0B",fontSize:12,flexShrink:0}}>\\u26A0</span><span style={{fontSize:12,color:"#78350F",lineHeight:1.5}}>{cn}</span></div>))}</div>:<div style={{padding:"12px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0",display:"flex",alignItems:"center",justifyContent:"center",gap:7,color:"#065F46",fontSize:12}}>\\u2705 No concerns noted</div>}</div><div style={{padding:"12px 14px",background:"#EFF6FF",borderRadius:9,border:"1px solid #BFDBFE",borderLeft:"4px solid #2563EB"}}><div style={{fontSize:10,fontWeight:700,color:"#1D4ED8",textTransform:"uppercase",letterSpacing:1.5,marginBottom:6}}>AI Summary</div><p style={{fontSize:13,color:"#0F172A",lineHeight:1.8,margin:0}}>{c.summary}</p></div></div>}{tab==="profile"&&<div style={{padding:"18px"}}><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>{[["\\uD83C\\uDF0D","Nationality",c.nationality||"\\u2014"],["\\uD83D\\uDCCD","Location",c.location||"\\u2014"],["\\uD83C\\uDF82","Age",c.age!=null?c.age+" years old":"\\u2014"],["\\uD83D\\uDC64","Gender",c.gender||"\\u2014"],["\\uD83D\\uDCC5","Experience",c.years_experience!=null?c.years_experience+" years":"\\u2014"],["\\uD83C\\uDDE6\\uD83C\\uDDEA","ME/UAE Exp",c.me_experience!=null?c.me_experience+" years":"\\u2014"],["\\uD83C\\uDF93","Education",c.education||"\\u2014"]].map(([ic,label,val])=>(<div key={label} style={{padding:"11px 13px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE"}}><div style={{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:4}}>{ic} {label}</div><div style={{fontSize:13,fontWeight:600,color:val==="\\u2014"?"#94A3B8":"#0D2171"}}>{val}</div></div>))}</div>{c.companies?.length>0&&<div style={{padding:"12px 14px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE",marginBottom:10}}><div style={{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>\\uD83C\\uDFE2 Companies</div><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.companies.map((co,ci)=>(<span key={ci} style={{fontSize:11,padding:"3px 10px",background:"white",color:"#0D2171",borderRadius:20,border:"1.5px solid #DBEAFE",fontWeight:600}}>{co}</span>))}</div></div>}{c.universities?.length>0&&<div style={{padding:"12px 14px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0",marginBottom:10}}><div style={{fontSize:10,fontWeight:700,color:"#166534",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>\\uD83C\\uDF93 Universities</div><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.universities.map((u,ui)=>(<span key={ui} style={{fontSize:11,padding:"3px 10px",background:"white",color:"#166534",borderRadius:20,border:"1.5px solid #BBF7D0",fontWeight:600}}>{u}</span>))}</div></div>}{c.me_companies?.length>0&&<div style={{padding:"12px 14px",background:"#FFF7ED",borderRadius:9,border:"1px solid #FED7AA",marginBottom:10}}><div style={{fontSize:10,fontWeight:700,color:"#C2410C",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>\\uD83C\\uDDE6\\uD83C\\uDDEA Middle East Experience</div><div style={{display:"flex",flexDirection:"column",gap:6}}>{c.me_companies.map((mc,mi)=>(<div key={mi} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"7px 10px",background:"white",borderRadius:7,border:"1px solid #FED7AA"}}><span style={{fontSize:12,fontWeight:600,color:"#0D2171"}}>{mc.name}</span><div style={{display:"flex",gap:6,alignItems:"center"}}>{mc.country&&<span style={{fontSize:10,padding:"2px 7px",background:"#FFF7ED",color:"#C2410C",borderRadius:20,border:"1px solid #FED7AA",fontWeight:600}}>{mc.country}</span>}{mc.years!=null&&<span style={{fontSize:10,color:"#94A3B8",fontWeight:500}}>{mc.years}yr</span>}</div></div>))}</div></div>}{c.languages?.length>0&&<div style={{padding:"12px 14px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE"}}><div style={{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>\\uD83D\\uDDE3\\uFE0F Languages</div><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.languages.map((l,li)=>(<span key={li} style={{fontSize:11,padding:"3px 10px",background:"white",color:"#0891B2",borderRadius:20,border:"1.5px solid #BAE6FD",fontWeight:600}}>{l}</span>))}</div></div>}</div>}</div>}</div>);})}<div style={{textAlign:"center",padding:"24px",fontSize:11,color:"#94A3B8"}}>\\u00A9 2025 Focal Middle East \\u00B7 CV Screener Pro \\u00B7 Shared Results (read-only)</div></div>);}ReactDOM.createRoot(document.getElementById("root")).render(<App/>);<\/script></body></html>';
+  const shareScript=`
+const{useState,useMemo,useRef,useEffect}=React;
+const R=React.createElement;
+const LOGO="${LOGO}";
+const MATCH={Excellent:{bg:"#DCFCE7",c:"#14532D",dot:"#10B981"},Good:{bg:"#DBEAFE",c:"#1E3A8A",dot:"#3B82F6"},Fair:{bg:"#FEF9C3",c:"#713F12",dot:"#F59E0B"},Poor:{bg:"#FEE2E2",c:"#7F1D1D",dot:"#EF4444"}};
+const RANKS=[{badge:"Top Match",border:"#F59E0B",hbg:"linear-gradient(135deg,#FFFBEB,#FEF3C7)",ac:"#92400E",medal:"🥇"},{badge:"2nd Place",border:"#94A3B8",hbg:"#F8FAFC",ac:"#475569",medal:"🥈"},{badge:"3rd Place",border:"#CD7F32",hbg:"#FFFAF5",ac:"#713F12",medal:"🥉"}];
+function rankMeta(i){if(i<3)return RANKS[i];return{badge:"Rank #"+(i+1),border:"#DBEAFE",hbg:"white",ac:"#3B82F6",medal:"#"+(i+1)};}
+function Ring({score,size=90}){if(score==null)return null;const r=size/2-10,circ=2*Math.PI*r,dash=(score/100)*circ;const col=score>=75?"#10B981":score>=50?"#F59E0B":"#EF4444";const tr=score>=75?"#D1FAE5":score>=50?"#FEF3C7":"#FEE2E2";return R("svg",{width:size,height:size,style:{display:"block",flexShrink:0}},R("circle",{cx:size/2,cy:size/2,r,fill:"none",stroke:tr,strokeWidth:"8"}),R("circle",{cx:size/2,cy:size/2,r,fill:"none",stroke:col,strokeWidth:"8",strokeDasharray:dash+" "+circ,strokeLinecap:"round",style:{transform:"rotate(-90deg)",transformOrigin:"center"}}),R("text",{x:size/2,y:size/2-7,textAnchor:"middle",dominantBaseline:"central",fill:col,fontSize:"20",fontWeight:"700"},score),R("text",{x:size/2,y:size/2+12,textAnchor:"middle",fill:col,fontSize:"10",opacity:"0.6"},"/100"));}
+function MiniRing({score,size=50}){if(score==null)return null;const r=size/2-6,circ=2*Math.PI*r,dash=(score/100)*circ;const col=score>=75?"#10B981":score>=50?"#F59E0B":"#EF4444";const tr=score>=75?"#DCFCE7":score>=50?"#FEF9C3":"#FEE2E2";return R("svg",{width:size,height:size,style:{display:"block",flexShrink:0}},R("circle",{cx:size/2,cy:size/2,r,fill:"none",stroke:tr,strokeWidth:"5.5"}),R("circle",{cx:size/2,cy:size/2,r,fill:"none",stroke:col,strokeWidth:"5.5",strokeDasharray:dash+" "+circ,strokeLinecap:"round",style:{transform:"rotate(-90deg)",transformOrigin:"center"}}),R("text",{x:size/2,y:size/2,textAnchor:"middle",dominantBaseline:"central",fill:col,fontSize:"13",fontWeight:"700"},score));}
+function Chip({label,onRemove}){return R("span",{style:{display:"inline-flex",alignItems:"center",gap:5,fontSize:11,fontWeight:600,padding:"3px 10px",background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,border:"1px solid #BFDBFE"}},label,onRemove&&R("button",{onClick:onRemove,style:{background:"none",border:"none",cursor:"pointer",color:"#93C5FD",padding:0,fontSize:12,lineHeight:1,fontFamily:"inherit"}},"×"));}
+function ChecklistDropdown({label,options,selected,onChange,placeholder}){const[open,setOpen]=useState(false);const[search,setSearch]=useState("");const[rect,setRect]=useState(null);const btnRef=useRef();const dropRef=useRef();useEffect(()=>{if(!open)return;const update=()=>{if(btnRef.current)setRect(btnRef.current.getBoundingClientRect());};update();const handler=e=>{if(btnRef.current&&!btnRef.current.contains(e.target)&&dropRef.current&&!dropRef.current.contains(e.target)){setOpen(false);setSearch("");}};document.addEventListener("mousedown",handler);window.addEventListener("scroll",update,true);return()=>{document.removeEventListener("mousedown",handler);window.removeEventListener("scroll",update,true);};},[open]);const filtered=options.filter(o=>o.toLowerCase().includes(search.toLowerCase()));const toggle=o=>onChange(selected.includes(o)?selected.filter(x=>x!==o):[...selected,o]);const btnLabel=selected.length===0?placeholder:selected.length===1?selected[0]:selected.length+" selected";return R("div",{style:{position:"relative",width:"100%"}},R("button",{ref:btnRef,className:"f-input",onClick:()=>setOpen(v=>!v),style:{cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",gap:6,textAlign:"left",whiteSpace:"nowrap",overflow:"hidden",borderColor:open?"#2563EB":"#DBEAFE"}},R("span",{style:{overflow:"hidden",textOverflow:"ellipsis",flex:1,minWidth:0}},btnLabel),selected.length>0&&R("span",{onPointerDown:e=>{e.stopPropagation();e.preventDefault();onChange([]);setOpen(false);},style:{background:"#DBEAFE",color:"#1D4ED8",borderRadius:20,padding:"1px 7px",fontSize:10,fontWeight:700,flexShrink:0,cursor:"pointer"}},"× "+selected.length),R("span",{style:{flexShrink:0,color:"#94A3B8",fontSize:10}},open?"▲":"▼")),open&&rect&&R("div",{ref:dropRef,style:{position:"fixed",top:rect.bottom+4,left:rect.left,width:rect.width,background:"white",border:"1.5px solid #DBEAFE",borderRadius:9,boxShadow:"0 8px 32px rgba(37,99,235,0.18)",zIndex:99999,maxHeight:240,overflowY:"auto"}},R("div",{style:{position:"sticky",top:0,background:"white",borderBottom:"1px solid #EFF6FF",padding:"6px 8px"}},R("input",{style:{width:"100%",padding:"6px 10px",border:"1.5px solid #DBEAFE",borderRadius:7,fontSize:12,fontFamily:"inherit",outline:"none",color:"#0F172A"},value:search,onChange:e=>setSearch(e.target.value),placeholder:"Search "+label.toLowerCase()+"...",onClick:e=>e.stopPropagation(),autoFocus:true})),filtered.length===0&&R("div",{style:{padding:14,fontSize:12,color:"#94A3B8",textAlign:"center"}},"No matches"),...filtered.map(o=>{const checked=selected.includes(o);return R("div",{key:o,onClick:()=>toggle(o),style:{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",cursor:"pointer",background:checked?"#EFF6FF":"white",borderBottom:"1px solid #F8FAFC"}},R("div",{style:{width:16,height:16,borderRadius:4,border:"2px solid "+(checked?"#2563EB":"#CBD5E1"),background:checked?"#2563EB":"white",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}},checked&&R("svg",{width:"10",height:"8",viewBox:"0 0 10 8",fill:"none"},R("path",{d:"M1 4l3 3 5-6",stroke:"white",strokeWidth:"1.8",strokeLinecap:"round",strokeLinejoin:"round"}))),R("span",{style:{fontSize:12,color:"#0F172A",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:checked?600:400}},o));}))})}
+function applyFiltersAndSort(results,filters,sortBy){let r=[...results];if(filters.matchLevel)r=r.filter(c=>c.match_level===filters.matchLevel);if(filters.gender)r=r.filter(c=>c.gender===filters.gender);if(filters.country){const q=filters.country.toLowerCase();r=r.filter(c=>(c.nationality||"").toLowerCase().includes(q)||(c.location||"").toLowerCase().includes(q));}if(filters.ageMin)r=r.filter(c=>c.age!=null&&c.age>=parseInt(filters.ageMin));if(filters.ageMax)r=r.filter(c=>c.age!=null&&c.age<=parseInt(filters.ageMax));if(filters.companies&&filters.companies.length>0)r=r.filter(c=>filters.companies.some(fc=>(c.companies||[]).some(co=>co.toLowerCase()===fc.toLowerCase())));if(filters.universities&&filters.universities.length>0)r=r.filter(c=>filters.universities.some(fu=>(c.universities||[]).some(u=>u.toLowerCase()===fu.toLowerCase())));if(sortBy==="name")r.sort((a,b)=>a.candidate_name.localeCompare(b.candidate_name));else if(sortBy==="age")r.sort((a,b)=>(a.age!=null?a.age:999)-(b.age!=null?b.age:999));else if(sortBy==="age_desc")r.sort((a,b)=>(b.age!=null?b.age:0)-(a.age!=null?a.age:0));else if(sortBy==="exp")r.sort((a,b)=>(b.years_experience||0)-(a.years_experience||0));else if(sortBy==="me_exp")r.sort((a,b)=>(b.me_experience||0)-(a.me_experience||0));else r.sort((a,b)=>b.score-a.score);return r;}
+function FilterBar({results,filters,setFilters,sortBy,setSortBy}){const countries=useMemo(()=>{const s=new Set();results.forEach(r=>{if(r.nationality)s.add(r.nationality);if(r.location)s.add(r.location);});return[...s].sort();},[results]);const allCompanies=useMemo(()=>{const s=new Set();results.forEach(r=>(r.companies||[]).forEach(c=>c&&s.add(c)));return[...s].sort();},[results]);const allUnis=useMemo(()=>{const s=new Set();results.forEach(r=>(r.universities||[]).forEach(u=>u&&s.add(u)));return[...s].sort();},[results]);const selCos=filters.companies||[],selUnis=filters.universities||[];const activeCount=[filters.gender,filters.country,selCos.length>0,selUnis.length>0,filters.ageMin||filters.ageMax,filters.matchLevel].filter(Boolean).length;const clearAll=()=>setFilters({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});return R("div",{style:{background:"white",border:"1.5px solid #DBEAFE",borderRadius:12,padding:"14px 16px",marginBottom:14}},R("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:8}},R("div",{style:{display:"flex",alignItems:"center",gap:8}},R("span",{style:{fontSize:14}},"🔍"),R("span",{style:{fontSize:13,fontWeight:700,color:"#0D2171"}},"Filter & Sort"),activeCount>0&&R("span",{style:{fontSize:11,fontWeight:700,padding:"2px 8px",background:"#2563EB",color:"white",borderRadius:20}},activeCount+" active")),R("div",{style:{display:"flex",gap:8,alignItems:"center"}},R("select",{value:sortBy,onChange:e=>setSortBy(e.target.value),style:{padding:"5px 10px",borderRadius:7,border:"1.5px solid #DBEAFE",fontSize:12,fontFamily:"inherit",color:"#0D2171",background:"white",cursor:"pointer"}},R("option",{value:"score"},"Sort: Best Score"),R("option",{value:"name"},"Sort: Name A-Z"),R("option",{value:"age"},"Sort: Youngest First"),R("option",{value:"age_desc"},"Sort: Oldest First"),R("option",{value:"exp"},"Sort: Most Experience"),R("option",{value:"me_exp"},"Sort: Most ME/UAE Exp")),activeCount>0&&R("button",{onClick:clearAll,style:{padding:"5px 11px",borderRadius:7,border:"1.5px solid #FECACA",background:"#FFF1F1",color:"#EF4444",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}},"× Clear all"))),R("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:10,marginBottom:10}},R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"Match Level"),R("select",{value:filters.matchLevel,onChange:e=>setFilters(f=>({...f,matchLevel:e.target.value})),className:"f-input"},R("option",{value:""},"All"),R("option",{value:"Excellent"},"Excellent"),R("option",{value:"Good"},"Good"),R("option",{value:"Fair"},"Fair"),R("option",{value:"Poor"},"Poor"))),R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"Gender"),R("select",{value:filters.gender,onChange:e=>setFilters(f=>({...f,gender:e.target.value})),className:"f-input"},R("option",{value:""},"All"),R("option",{value:"Male"},"Male"),R("option",{value:"Female"},"Female"))),R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"Country"),R("select",{value:filters.country,onChange:e=>setFilters(f=>({...f,country:e.target.value})),className:"f-input"},R("option",{value:""},"All"),...countries.map(c=>R("option",{key:c,value:c},c)))),R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"Age Range"),R("div",{style:{display:"flex",gap:5,alignItems:"center"}},R("input",{className:"f-input",type:"number",value:filters.ageMin,onChange:e=>setFilters(f=>({...f,ageMin:e.target.value})),placeholder:"Min",style:{width:"50%"}}),R("span",{style:{fontSize:11,color:"#94A3B8"}},"-"),R("input",{className:"f-input",type:"number",value:filters.ageMax,onChange:e=>setFilters(f=>({...f,ageMax:e.target.value})),placeholder:"Max",style:{width:"50%"}})))),R("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}},R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"🏢 Has Worked At"),R(ChecklistDropdown,{label:"companies",options:allCompanies,selected:selCos,onChange:v=>setFilters(f=>({...f,companies:v})),placeholder:"Select companies..."})),R("div",null,R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:5}},"🎓 Studied At"),R(ChecklistDropdown,{label:"universities",options:allUnis,selected:selUnis,onChange:v=>setFilters(f=>({...f,universities:v})),placeholder:"Select universities..."}))),activeCount>0&&R("div",{style:{display:"flex",flexWrap:"wrap",gap:6,marginTop:12,paddingTop:10,borderTop:"1px solid #EFF6FF"}},filters.matchLevel&&R(Chip,{label:"Level: "+filters.matchLevel,onRemove:()=>setFilters(f=>({...f,matchLevel:""}))}),filters.gender&&R(Chip,{label:"Gender: "+filters.gender,onRemove:()=>setFilters(f=>({...f,gender:""}))}),filters.country&&R(Chip,{label:"Country: "+filters.country,onRemove:()=>setFilters(f=>({...f,country:""}))}),(filters.ageMin||filters.ageMax)&&R(Chip,{label:"Age: "+(filters.ageMin||"any")+"-"+(filters.ageMax||"any"),onRemove:()=>setFilters(f=>({...f,ageMin:"",ageMax:""}))}),selCos.map(c=>R(Chip,{key:c,label:"🏢 "+c,onRemove:()=>setFilters(f=>({...f,companies:f.companies.filter(x=>x!==c)}))})),selUnis.map(u=>R(Chip,{key:u,label:"🎓 "+u,onRemove:()=>setFilters(f=>({...f,universities:f.universities.filter(x=>x!==u)}))}))));
+}
+function ShareApp(){
+  const results=window.__SHARE_DATA__;const jobTitle=window.__JOB_TITLE__;
+  const[filters,setFilters]=useState({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});
+  const[sortBy,setSortBy]=useState("score");const[openIdx,setOpen]=useState(null);const[tab,setTab]=useState("review");
+  const displayed=useMemo(()=>applyFiltersAndSort(results,filters,sortBy),[results,filters,sortBy]);
+  return R("div",{style:{maxWidth:900,margin:"0 auto",padding:"24px 20px"}},
+    R("div",{style:{display:"flex",alignItems:"center",gap:12,marginBottom:6}},
+      R("img",{src:LOGO,alt:"Focal",style:{width:44,height:44,borderRadius:10,objectFit:"cover"}}),
+      R("div",null,
+        R("div",{style:{fontSize:10,color:"#3B82F6",fontWeight:700,textTransform:"uppercase",letterSpacing:2}},"Shared Results"),
+        R("h2",{style:{fontSize:20,fontWeight:800,color:"#0D2171"}},"CV Screening — ",R("span",{style:{color:"#2563EB"}},jobTitle))
+      )
+    ),
+    R("p",{style:{fontSize:12,color:"#64748B",marginBottom:16,marginLeft:56}},displayed.length+" of "+results.length+" candidates shown · click any card to expand"),
+    R(FilterBar,{results,filters,setFilters,sortBy,setSortBy}),
+    displayed.length===0&&R("div",{style:{textAlign:"center",padding:"40px",background:"white",borderRadius:12,border:"1.5px solid #DBEAFE"}},R("div",{style:{fontSize:32,marginBottom:10}},"🔍"),R("div",{style:{fontSize:15,fontWeight:700,color:"#0D2171"}},"No candidates match your filters")),
+    ...displayed.map((c,i)=>{
+      const rk=rankMeta(i);const ms=MATCH[c.match_level]||MATCH.Poor;const isOpen=openIdx===i;
+      return R("div",{key:c._file+i,style:{background:"white",border:(i<3?"1.5px":"1px")+" solid "+(isOpen?"#2563EB":rk.border),borderRadius:12,overflow:"hidden",marginBottom:10,boxShadow:isOpen?"0 0 0 3px rgba(37,99,235,0.1)":"0 1px 4px rgba(59,130,246,0.07)"}},
+        R("div",{onClick:()=>{setOpen(v=>v===i?null:i);setTab("review");},style:{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",cursor:"pointer",background:isOpen?"#F0F7FF":"transparent",userSelect:"none"}},
+          R("div",{style:{background:rk.hbg,border:"1px solid "+rk.border+"55",borderRadius:8,padding:"5px 8px",fontSize:11,fontWeight:700,color:rk.ac,flexShrink:0,textAlign:"center",minWidth:48,lineHeight:1.4}},rk.medal,R("br"),R("span",{style:{fontSize:9}},rk.badge)),
+          R(MiniRing,{score:c.score,size:52}),
+          R("div",{style:{flex:1,minWidth:0}},
+            R("div",{style:{display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:2}},
+              R("span",{style:{fontSize:15,fontWeight:700,color:"#0D2171"}},c.candidate_name),
+              c.match_level&&R("span",{style:{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:20,background:ms.bg,color:ms.c,display:"inline-flex",alignItems:"center",gap:4}},R("span",{style:{width:5,height:5,borderRadius:"50%",background:ms.dot,flexShrink:0}}),c.match_level)
+            ),
+            R("div",{style:{display:"flex",flexWrap:"wrap",gap:6,fontSize:11,color:"#64748B"}},
+              c.current_role&&R("span",null,c.current_role),
+              c.years_experience!=null&&R("span",{style:{color:"#94A3B8"}},"· "+c.years_experience+"yr exp"),
+              c.age!=null&&R("span",{style:{color:"#7C3AED",fontWeight:600}},"· Age "+c.age),
+              (c.nationality||c.location)&&R("span",{style:{color:"#0891B2"}},"· 🌍 "+(c.nationality||c.location)),
+              c.gender&&R("span",null,"· "+(c.gender==="Male"?"♂":"♀")+" "+c.gender),
+              c.me_experience>0&&R("span",{style:{background:"#FFF7ED",color:"#C2410C",border:"1px solid #FED7AA",borderRadius:20,fontSize:10,fontWeight:700,padding:"1px 7px"}},"🇦🇪 "+c.me_experience+"yr ME")
+            )
+          ),
+          !isOpen&&c.key_skills&&c.key_skills.length>0&&R("div",{style:{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"flex-end",maxWidth:220}},...c.key_skills.slice(0,3).map((s,si)=>R("span",{key:si,style:{fontSize:10,padding:"2px 8px",background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,border:"1px solid #BFDBFE",whiteSpace:"nowrap"}},s))),
+          R("span",{style:{fontSize:14,color:"#94A3B8",flexShrink:0}},isOpen?"▲":"▼")
+        ),
+        isOpen&&R("div",{style:{borderTop:"1.5px solid #DBEAFE"}},
+          R("div",{style:{display:"flex",background:"#F0F7FF",borderBottom:"1px solid #DBEAFE"}},
+            ...[["review","⭐","AI Review"],["profile","👤","Profile"]].map(([t,ic,lbl])=>R("button",{key:t,onClick:()=>setTab(t),style:{flex:1,padding:"10px",background:tab===t?"white":"transparent",border:"none",borderBottom:tab===t?"2px solid #2563EB":"2px solid transparent",color:tab===t?"#1D4ED8":"#64748B",fontSize:12,fontWeight:tab===t?700:400,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:5,fontFamily:"inherit"}},ic+" "+lbl))
+          ),
+          tab==="review"&&R("div",{style:{padding:"18px"}},
+            R("div",{style:{display:"flex",gap:16,alignItems:"center",marginBottom:14,padding:"14px",background:"linear-gradient(135deg,#EFF6FF,#F0F7FF)",borderRadius:11,border:"1px solid #BFDBFE"}},R(Ring,{score:c.score,size:88}),R("div",{style:{flex:1}},R("div",{style:{fontSize:17,fontWeight:800,color:"#0D2171",marginBottom:2}},c.candidate_name),R("div",{style:{fontSize:12,color:"#3B82F6",marginBottom:8}},c.current_role+(c.years_experience!=null?" · "+c.years_experience+" yrs":"")),R("div",{style:{display:"flex",flexWrap:"wrap",gap:4}},...(c.key_skills||[]).map((s,si)=>R("span",{key:si,style:{fontSize:10,padding:"2px 9px",background:"white",color:"#1D4ED8",borderRadius:20,border:"1.5px solid #BFDBFE",fontWeight:600}},s))))),
+            R("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}},c.top_strengths&&c.top_strengths.length>0&&R("div",{style:{padding:"12px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0"}},R("div",{style:{fontSize:10,fontWeight:700,color:"#065F46",textTransform:"uppercase",letterSpacing:1.5,marginBottom:8}},"Strengths"),...c.top_strengths.map((s,si)=>R("div",{key:si,style:{display:"flex",gap:6,alignItems:"flex-start",marginBottom:6}},R("span",{style:{color:"#10B981",fontSize:12,flexShrink:0}},"✓"),R("span",{style:{fontSize:12,color:"#065F46",lineHeight:1.5}},s)))),c.concerns&&c.concerns.length>0?R("div",{style:{padding:"12px",background:"#FFFBEB",borderRadius:9,border:"1px solid #FDE68A"}},R("div",{style:{fontSize:10,fontWeight:700,color:"#78350F",textTransform:"uppercase",letterSpacing:1.5,marginBottom:8}},"Watch Out"),...c.concerns.map((cn,ci)=>R("div",{key:ci,style:{display:"flex",gap:6,alignItems:"flex-start",marginBottom:6}},R("span",{style:{color:"#F59E0B",fontSize:12,flexShrink:0}},"⚠"),R("span",{style:{fontSize:12,color:"#78350F",lineHeight:1.5}},cn)))):R("div",{style:{padding:"12px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0",display:"flex",alignItems:"center",justifyContent:"center",gap:7,color:"#065F46",fontSize:12}},"✅ No concerns noted")),
+            R("div",{style:{padding:"12px 14px",background:"#EFF6FF",borderRadius:9,border:"1px solid #BFDBFE",borderLeft:"4px solid #2563EB"}},R("div",{style:{fontSize:10,fontWeight:700,color:"#1D4ED8",textTransform:"uppercase",letterSpacing:1.5,marginBottom:6}},"AI Summary"),R("p",{style:{fontSize:13,color:"#0F172A",lineHeight:1.8,margin:0}},c.summary))
+          ),
+          tab==="profile"&&R("div",{style:{padding:"18px"}},R("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}},...[["🌍","Nationality",c.nationality||"—"],["📍","Location",c.location||"—"],["🎂","Age",c.age!=null?c.age+" years old":"—"],["👤","Gender",c.gender||"—"],["📅","Experience",c.years_experience!=null?c.years_experience+" years":"—"],["🇦🇪","ME/UAE Exp",c.me_experience!=null?c.me_experience+" years":"—"],["🎓","Education",c.education||"—"]].map(([ic,label,val])=>R("div",{key:label,style:{padding:"11px 13px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE"}},R("div",{style:{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:4}},ic+" "+label),R("div",{style:{fontSize:13,fontWeight:600,color:val==="—"?"#94A3B8":"#0D2171"}},val)))),c.companies&&c.companies.length>0&&R("div",{style:{padding:"12px 14px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE",marginBottom:10}},R("div",{style:{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}},"🏢 Companies"),R("div",{style:{display:"flex",flexWrap:"wrap",gap:5}},...c.companies.map((co,ci)=>R("span",{key:ci,style:{fontSize:11,padding:"3px 10px",background:"white",color:"#0D2171",borderRadius:20,border:"1.5px solid #DBEAFE",fontWeight:600}},co)))),c.universities&&c.universities.length>0&&R("div",{style:{padding:"12px 14px",background:"#F0FDF4",borderRadius:9,border:"1px solid #BBF7D0",marginBottom:10}},R("div",{style:{fontSize:10,fontWeight:700,color:"#166534",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}},"🎓 Universities"),R("div",{style:{display:"flex",flexWrap:"wrap",gap:5}},...c.universities.map((u,ui)=>R("span",{key:ui,style:{fontSize:11,padding:"3px 10px",background:"white",color:"#166534",borderRadius:20,border:"1.5px solid #BBF7D0",fontWeight:600}},u)))),c.me_companies&&c.me_companies.length>0&&R("div",{style:{padding:"12px 14px",background:"#FFF7ED",borderRadius:9,border:"1px solid #FED7AA",marginBottom:10}},R("div",{style:{fontSize:10,fontWeight:700,color:"#C2410C",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}},"🇦🇪 Middle East Experience"),R("div",{style:{display:"flex",flexDirection:"column",gap:6}},...c.me_companies.map((mc,mi)=>R("div",{key:mi,style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"7px 10px",background:"white",borderRadius:7,border:"1px solid #FED7AA"}},R("span",{style:{fontSize:12,fontWeight:600,color:"#0D2171"}},mc.name),R("div",{style:{display:"flex",gap:6,alignItems:"center"}},mc.country&&R("span",{style:{fontSize:10,padding:"2px 7px",background:"#FFF7ED",color:"#C2410C",borderRadius:20,border:"1px solid #FED7AA",fontWeight:600}},mc.country),mc.years!=null&&R("span",{style:{fontSize:10,color:"#94A3B8",fontWeight:500}},mc.years+"yr")))))),c.languages&&c.languages.length>0&&R("div",{style:{padding:"12px 14px",background:"#F8FAFF",borderRadius:9,border:"1px solid #DBEAFE"}},R("div",{style:{fontSize:10,fontWeight:700,color:"#64748B",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}},"🗣️ Languages"),R("div",{style:{display:"flex",flexWrap:"wrap",gap:5}},...c.languages.map((l,li)=>R("span",{key:li,style:{fontSize:11,padding:"3px 10px",background:"white",color:"#0891B2",borderRadius:20,border:"1.5px solid #BAE6FD",fontWeight:600}},l)))))
+        )
+      );
+    }),
+    R("div",{style:{textAlign:"center",padding:"24px",fontSize:11,color:"#94A3B8"}},"© 2026 Focal Middle East · CV Screener Pro · Shared Results (read-only)")
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(R(ShareApp));
+`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>CV Screening Results — ${jobTitle.replace(/"/g,"&quot;")}</title><script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"><\/script><script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"><\/script><style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html,body,#root{height:100%;overflow:auto}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#EEF4FF;color:#0F172A}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#BFDBFE;border-radius:4px}.f-input{width:100%;padding:8px 11px;border:1.5px solid #DBEAFE;border-radius:8px;font-size:12px;font-family:inherit;color:#0F172A;background:white;outline:none}.f-input:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,0.1)}</style></head><body><div id="root"></div><script>window.__SHARE_DATA__=${dataJSON};window.__JOB_TITLE__=${JSON.stringify(jobTitle)};<\/script><script>${shareScript}<\/script></body></html>`;
 }
 
 function downloadFile(content,filename,type){
   const blob=new Blob([content],{type});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");a.href=url;a.download=filename;
-  document.body.appendChild(a);a.click();
-  document.body.removeChild(a);URL.revokeObjectURL(url);
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
-/* ── Main App ─── */
+// ── Sidebar ──────────────────────────────────────────────
+function Sidebar({jobTitle,setJobTitle,jobDesc,setJobDesc,apiKey,setApiKey,showKey,setShowKey,topN,setTopN,files,setFiles,addFiles,removeFile,clearFiles,onAnalyze,ready,step}){
+  const fileRef=useRef();
+  const[dragging,setDragging]=useState(false);
+  const onDrop=useCallback(e=>{e.preventDefault();setDragging(false);addFiles(e.dataTransfer.files);},[addFiles]);
+  return R("aside",{className:"app-sidebar",style:{width:370,minWidth:370,height:"100%",background:"linear-gradient(180deg,#0D2171 0%,#1E3A9E 100%)",display:"flex",flexDirection:"column",padding:"22px 20px",overflowY:"auto"}},
+    R("div",{style:{marginBottom:22,paddingBottom:18,borderBottom:"1px solid rgba(255,255,255,0.1)",display:"flex",alignItems:"center",gap:11}},
+      R("img",{src:LOGO,alt:"Focal",style:{width:38,height:38,borderRadius:8,objectFit:"cover",display:"block"}}),
+      R("div",null,
+        R("div",{style:{fontSize:18,fontWeight:800,color:"white",lineHeight:1,letterSpacing:"-0.3px"}},"Focal ME"),
+        R("div",{style:{fontSize:9,color:"rgba(255,255,255,0.4)",letterSpacing:"2px",textTransform:"uppercase",marginTop:3}},"CV Screener Pro")
+      )
+    ),
+    R("div",{style:{marginBottom:13}},
+      R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.42)",textTransform:"uppercase",letterSpacing:2,marginBottom:7}},"API Key ",R("span",{style:{color:"#FCA5A5"}},"*")),
+      R("div",{style:{position:"relative"}},
+        R("input",{className:"s-input",type:showKey?"text":"password",value:apiKey,onChange:e=>setApiKey(e.target.value),placeholder:"sk-ant-...",style:{paddingRight:40}}),
+        R("button",{onClick:()=>setShowKey(s=>!s),style:{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:"rgba(255,255,255,0.4)",cursor:"pointer",fontSize:14,padding:0}},showKey?"🔒":"👁")
+      ),
+      R("div",{style:{fontSize:9,color:"rgba(255,255,255,0.22)",marginTop:4}},"Stored locally in your browser only")
+    ),
+    R("div",{style:{marginBottom:13}},
+      R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.42)",textTransform:"uppercase",letterSpacing:2,marginBottom:7}},"Job Title ",R("span",{style:{color:"#FCA5A5"}},"*")),
+      R("input",{className:"s-input",value:jobTitle,onChange:e=>setJobTitle(e.target.value),placeholder:"e.g. Senior Software Engineer"})
+    ),
+    R("div",{style:{marginBottom:13}},
+      R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.42)",textTransform:"uppercase",letterSpacing:2,marginBottom:7}},"Job Description"),
+      R("textarea",{className:"s-input",value:jobDesc,onChange:e=>setJobDesc(e.target.value),placeholder:"Paste job posting for more accurate scoring...",rows:5})
+    ),
+    R("div",{style:{marginBottom:13}},
+      R("label",{style:{display:"block",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.42)",textTransform:"uppercase",letterSpacing:2,marginBottom:9}},"Top N to Highlight"),
+      R("div",{style:{display:"flex",gap:6,flexWrap:"wrap"}},
+        ...[3,5,10,15,20].map(n=>R("button",{key:n,onClick:()=>setTopN(n),style:{padding:"5px 13px",borderRadius:20,border:"1.5px solid "+(topN===n?"white":"rgba(255,255,255,0.2)"),background:topN===n?"white":"transparent",color:topN===n?"#0D2171":"rgba(255,255,255,0.7)",fontSize:12,fontWeight:topN===n?700:400,cursor:"pointer",fontFamily:"inherit",transition:"all .15s"}},"Top "+n))
+      )
+    ),
+    R("div",{style:{flex:1,marginBottom:13}},
+      R("input",{ref:fileRef,type:"file",multiple:true,accept:".pdf,.docx,.doc,.jpg,.jpeg,.png",style:{display:"none"},onChange:e=>{addFiles(e.target.files);e.target.value=""}}),
+      R("div",{onClick:()=>fileRef.current.click(),onDragOver:e=>{e.preventDefault();setDragging(true)},onDragLeave:()=>setDragging(false),onDrop,
+        style:{border:"2px dashed "+(dragging?"white":"rgba(255,255,255,0.25)"),borderRadius:12,padding:"22px 16px",textAlign:"center",cursor:"pointer",background:dragging?"rgba(255,255,255,0.08)":"transparent",transition:"all .2s",marginBottom:10}},
+        R("div",{style:{fontSize:28,marginBottom:6}},"☁"),
+        R("div",{style:{fontSize:13,fontWeight:600,color:"white",marginBottom:3}},files.length===0?"Drop CVs or click to browse":files.length+" file"+(files.length===1?"":"s")+" selected"),
+        R("div",{style:{fontSize:11,color:"rgba(255,255,255,0.38)"}},"PDF, Word, JPG / PNG")
+      ),
+      files.length>0&&R("div",{style:{display:"flex",flexDirection:"column",gap:4,maxHeight:160,overflowY:"auto"}},
+        files.map((f,i)=>R("div",{key:i,style:{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",background:"rgba(255,255,255,0.07)",borderRadius:7}},
+          R("span",{style:{fontSize:11,color:"rgba(255,255,255,0.75)",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},f.name),
+          R("button",{onClick:e=>{e.stopPropagation();removeFile(i)},style:{background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,0.4)",fontSize:15,padding:"0 2px",lineHeight:1}},"×")
+        ))
+      )
+    ),
+    files.length>0&&R("button",{onClick:clearFiles,style:{background:"none",border:"none",color:"rgba(255,255,255,0.35)",fontSize:11,cursor:"pointer",marginBottom:8,fontFamily:"inherit",textAlign:"left"}},"× Clear all files"),
+    R("button",{onClick:onAnalyze,disabled:!ready||step==="analyzing",
+      style:{width:"100%",padding:"13px",borderRadius:10,border:"none",background:ready&&step!=="analyzing"?"linear-gradient(135deg,#3B82F6,#2563EB)":"rgba(255,255,255,0.12)",color:ready&&step!=="analyzing"?"white":"rgba(255,255,255,0.35)",fontSize:14,fontWeight:700,cursor:ready&&step!=="analyzing"?"pointer":"not-allowed",fontFamily:"inherit",transition:"all .2s"}},
+      step==="analyzing"?"Analyzing...":"🚀 Analyze "+files.length+" CV"+(files.length===1?"":"s")
+    )
+  );
+}
+
+// ── Welcome Screen ───────────────────────────────────────
+function Welcome(){
+  return R("div",{style:{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",gap:24,padding:"40px 20px",textAlign:"center"}},
+    R("div",{style:{width:80,height:80,borderRadius:20,overflow:"hidden",boxShadow:"0 8px 30px rgba(13,33,113,0.15)",background:"white",display:"flex",alignItems:"center",justifyContent:"center"}},
+      R("img",{src:LOGO,alt:"Focal",style:{width:72,height:72,objectFit:"cover"}})
+    ),
+    R("div",null,
+      R("h1",{style:{fontSize:28,fontWeight:800,color:"#0D2171",marginBottom:8}},"AI-Powered CV Screening"),
+      R("p",{style:{fontSize:14,color:"#64748B",maxWidth:420,lineHeight:1.7}},"Upload CVs, set the role, and let AI rank every candidate — then share results with your team.")
+    ),
+    R("div",{style:{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,maxWidth:560}},
+      ...[ ["📤","Upload","PDF, Word, JPG, PNG"],["🧠","Full-Text AI","Reads the entire CV"],["🏆","Ranked + Filtered","Sort & filter results"],["🔗","Share Results","Send to coworkers"] ].map(([ic,title,sub])=>
+        R("div",{key:title,style:{background:"white",borderRadius:12,padding:"16px 12px",border:"1.5px solid #DBEAFE",boxShadow:"0 2px 8px rgba(59,130,246,0.07)"}},
+          R("div",{style:{fontSize:24,marginBottom:8}},ic),
+          R("div",{style:{fontSize:12,fontWeight:700,color:"#0D2171",marginBottom:4}},title),
+          R("div",{style:{fontSize:11,color:"#94A3B8",lineHeight:1.4}},sub)
+        )
+      )
+    ),
+    R("p",{style:{fontSize:13,color:"#94A3B8"}},
+      "← Enter your ",R("strong",{style:{color:"#2563EB"}},"API key"),", ",R("strong",{style:{color:"#2563EB"}},"job title")," & upload CVs to begin."
+    )
+  );
+}
+
+// ── Results Panel ────────────────────────────────────────
+function ResultsPanel({results,topN,jobTitle,progress,step}){
+  const[openIdx,setOpenIdx]=useState(null);
+  const[filters,setFilters]=useState({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});
+  const[sortBy,setSortBy]=useState("score");
+  const[shareMsg,setShareMsg]=useState("");
+
+  const scored=results.filter(r=>!r._imageOnly);
+  const imageOnly=results.filter(r=>r._imageOnly);
+  const displayed=useMemo(()=>applyFiltersAndSort(scored,filters,sortBy),[scored,filters,sortBy]);
+
+  const handleShare=()=>{
+    const html=generateShareHTML(results,jobTitle);
+    const fname="cv-results-"+jobTitle.replace(/[^a-zA-Z0-9]/g,"-").toLowerCase()+".html";
+    downloadFile(html,fname,"text/html");
+    setShareMsg("Downloaded! Share this HTML file — anyone can open it in Chrome.");
+    setTimeout(()=>setShareMsg(""),5000);
+  };
+
+  if(step==="analyzing"){
+    const doneN=progress.filter(p=>["done","error","image"].includes(p.status)).length;
+    const pct=progress.length?Math.round((doneN/progress.length)*100):0;
+    return R("div",{style:{padding:"24px 28px",height:"100%",overflowY:"auto"}},
+      R("div",{style:{maxWidth:600,margin:"0 auto"}},
+        R("div",{style:{marginBottom:20}},
+          R("div",{style:{fontSize:15,fontWeight:700,color:"#0D2171",marginBottom:10}},"Analyzing CVs for: "+jobTitle),
+          R("div",{style:{background:"#EFF6FF",borderRadius:8,height:10,marginBottom:6,overflow:"hidden"}},
+            R("div",{style:{background:"#2563EB",height:"100%",width:pct+"%",transition:"width .3s",borderRadius:8}})
+          ),
+          R("div",{style:{fontSize:12,color:"#64748B"}},doneN+" of "+progress.length+" · "+pct+"%")
+        ),
+        R("div",{style:{display:"flex",flexDirection:"column",gap:6}},
+          ...progress.map((p,i)=>{
+            const icons={pending:"⏳",extracting:"📄",analyzing:"🤔",done:"✅",error:"❌",image:"🖼️"};
+            const colors={pending:"#94A3B8",extracting:"#3B82F6",analyzing:"#8B5CF6",done:"#10B981",error:"#EF4444",image:"#F59E0B"};
+            return R("div",{key:i,style:{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",background:"white",borderRadius:8,border:"1px solid #DBEAFE"}},
+              R("span",null,icons[p.status]||"⏳"),
+              R("span",{style:{fontSize:12,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",color:colors[p.status]||"#64748B"}},p.name),
+              R("span",{style:{fontSize:11,color:colors[p.status]||"#94A3B8",fontWeight:600,flexShrink:0}},
+                p.status==="error"?"Failed":p.status==="image"?"Image CV":p.status.charAt(0).toUpperCase()+p.status.slice(1))
+            );
+          })
+        )
+      )
+    );
+  }
+
+  return R("div",{style:{padding:"20px 24px",height:"100%",overflowY:"auto"}},
+    R("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,flexWrap:"wrap",gap:8}},
+      R("div",null,
+        R("h2",{style:{fontSize:18,fontWeight:800,color:"#0D2171"}},"Results — "+jobTitle),
+        R("div",{style:{fontSize:12,color:"#64748B"}},scored.length+" candidates scored")
+      ),
+      R("div",{style:{display:"flex",gap:8,alignItems:"center"}},
+        shareMsg&&R("span",{style:{fontSize:12,color:"#10B981",fontWeight:600}},shareMsg),
+        R("button",{onClick:handleShare,style:{padding:"8px 16px",borderRadius:8,border:"1.5px solid #DBEAFE",background:"white",color:"#0D2171",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:6}},"📤 Share Results")
+      )
+    ),
+    R(FilterBar,{results:scored,filters,setFilters,sortBy,setSortBy}),
+    displayed.length===0&&R("div",{style:{textAlign:"center",padding:"40px",background:"white",borderRadius:12,border:"1.5px solid #DBEAFE"}},R("div",{style:{fontSize:32,marginBottom:10}},"🔍"),R("div",{style:{fontSize:15,fontWeight:700,color:"#0D2171"}},"No candidates match your filters")),
+    ...displayed.map((c,i)=>{
+      const rk=rankMeta(i);const ms=MATCH[c.match_level]||MATCH.Poor;const isOpen=openIdx===i;
+      const isTop=i<topN;
+      return R("div",{key:c._file+i,className:"fu",style:{animationDelay:(i*40)+"ms",background:"white",border:(isTop?"1.5px":"1px")+" solid "+(isOpen?"#2563EB":isTop?rk.border:"#E2E8F0"),borderRadius:12,overflow:"hidden",marginBottom:10,boxShadow:isOpen?"0 0 0 3px rgba(37,99,235,0.1)":"0 1px 4px rgba(59,130,246,0.07)"}},
+        R("div",{onClick:()=>setOpenIdx(v=>v===i?null:i),style:{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",cursor:"pointer",background:isOpen?"#F0F7FF":"transparent",userSelect:"none"}},
+          isTop
+            ?R("div",{style:{background:rk.hbg,border:"1px solid "+rk.border+"55",borderRadius:8,padding:"5px 8px",fontSize:11,fontWeight:700,color:rk.ac,flexShrink:0,textAlign:"center",minWidth:48,lineHeight:1.4}},rk.medal,R("br"),R("span",{style:{fontSize:9}},rk.badge))
+            :R("div",{style:{width:48,textAlign:"center",fontSize:12,color:"#94A3B8",fontWeight:600,flexShrink:0}},"#"+(i+1)),
+          R(MiniRing,{score:c.score,size:52}),
+          R("div",{style:{flex:1,minWidth:0}},
+            R("div",{style:{display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:2}},
+              R("span",{style:{fontSize:15,fontWeight:700,color:"#0D2171"}},c.candidate_name),
+              c.match_level&&R("span",{style:{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:20,background:ms.bg,color:ms.c,display:"inline-flex",alignItems:"center",gap:4}},R("span",{style:{width:5,height:5,borderRadius:"50%",background:ms.dot,flexShrink:0}}),c.match_level)
+            ),
+            R("div",{style:{display:"flex",flexWrap:"wrap",gap:6,fontSize:11,color:"#64748B"}},
+              c.current_role&&R("span",null,c.current_role),
+              c.years_experience!=null&&R("span",{style:{color:"#94A3B8"}},"· "+c.years_experience+"yr exp"),
+              c.age!=null&&R("span",{style:{color:"#7C3AED",fontWeight:600}},"· Age "+c.age),
+              (c.nationality||c.location)&&R("span",{style:{color:"#0891B2"}},"· 🌍 "+(c.nationality||c.location)),
+              c.gender&&R("span",null,"· "+(c.gender==="Male"?"♂":"♀")+" "+c.gender),
+              c.me_experience>0&&R("span",{style:{background:"#FFF7ED",color:"#C2410C",border:"1px solid #FED7AA",borderRadius:20,fontSize:10,fontWeight:700,padding:"1px 7px"}},"🇦🇪 "+c.me_experience+"yr ME")
+            )
+          ),
+          !isOpen&&c.key_skills&&c.key_skills.length>0&&R("div",{style:{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"flex-end",maxWidth:200}},...c.key_skills.slice(0,3).map((s,si)=>R("span",{key:si,style:{fontSize:10,padding:"2px 8px",background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,border:"1px solid #BFDBFE",whiteSpace:"nowrap"}},s))),
+          R("span",{style:{fontSize:14,color:"#94A3B8",flexShrink:0}},isOpen?"▲":"▼")
+        ),
+        isOpen&&R(CandidateDetail,{c,showCV:true})
+      );
+    }),
+    imageOnly.length>0&&R("div",{style:{marginTop:16,padding:"14px 18px",background:"#FFFBEB",borderRadius:12,border:"1px solid #FDE68A"}},
+      R("div",{style:{fontSize:12,fontWeight:700,color:"#78350F",marginBottom:8}},"🖼️ Image-based CVs ("+imageOnly.length+") — manual review needed"),
+      ...imageOnly.map((c,i)=>R("div",{key:i,style:{fontSize:12,color:"#92400E",padding:"4px 0"}},c.candidate_name||c._file))
+    )
+  );
+}
+
+// ── Main App ─────────────────────────────────────────────
 function App(){
   const[step,setStep]=useState("setup");
   const[jobTitle,setJobTitle]=useState("");
@@ -397,41 +689,29 @@ function App(){
   const[apiKey,setApiKey]=useState(localStorage.getItem("focal_api_key")||"");
   const[showKey,setShowKey]=useState(false);
   const[files,setFiles]=useState([]);
-  const[topN,setTopN]=useState(5);
+  const[topN,setTopN]=useState(3);
   const[progress,setProg]=useState([]);
   const[results,setResults]=useState([]);
-  const[dragging,setDrag]=useState(false);
   const[error,setError]=useState("");
-  const[openIdx,setOpen]=useState(null);
-  const[showAll,setShowAll]=useState(false);
-  const[filters,setFilters]=useState({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});
-  const[sortBy,setSortBy]=useState("score");
-  const[shareMsg,setShareMsg]=useState("");
-  const fileRef=useRef();
 
-  // Persist API key
   useEffect(()=>{if(apiKey)localStorage.setItem("focal_api_key",apiKey);else localStorage.removeItem("focal_api_key");},[apiKey]);
-
-  const displayResults=useMemo(()=>applyFiltersAndSort(results,filters,sortBy),[results,filters,sortBy]);
 
   const addFiles=useCallback(list=>{
     const ok=Array.from(list).filter(f=>{
       const n=f.name.toLowerCase();
-      return n.endsWith(".pdf")||n.endsWith(".docx")||n.endsWith(".jpg")||n.endsWith(".jpeg")||n.endsWith(".png")||
-             f.type==="application/pdf"||f.type==="application/vnd.openxmlformats-officedocument.wordprocessingml.document"||
-             f.type.startsWith("image/");
+      return n.endsWith(".pdf")||n.endsWith(".docx")||n.endsWith(".doc")||n.endsWith(".jpg")||n.endsWith(".jpeg")||n.endsWith(".png");
     });
-    setFiles(p=>{const s=new Set(p.map(f=>f.name));return[...p,...ok.filter(f=>!s.has(f.name))];});
+    setFiles(p=>{const s=new Set(p.map(x=>x.name));return[...p,...ok.filter(f=>!s.has(f.name))];});
   },[]);
-  const removeFile=(e,i)=>{e.preventDefault();e.stopPropagation();setFiles(p=>p.filter((_,j)=>j!==i));};
-  const clearAll=()=>setFiles([]);
-  const onDrop=useCallback(e=>{e.preventDefault();setDrag(false);addFiles(e.dataTransfer.files);},[addFiles]);
+  const removeFile=i=>setFiles(p=>p.filter((_,j)=>j!==i));
+  const clearFiles=()=>setFiles([]);
+
+  const ready=jobTitle.trim()&&files.length>0&&apiKey.trim();
 
   const analyze=async()=>{
-    if(!jobTitle.trim()||!files.length||!apiKey.trim())return;
-    setStep("analyzing");setError("");setOpen(null);setShowAll(false);
-    setFilters({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});setSortBy("score");
-    setProg(files.map(f=>({name:f.name,status:"pending",result:null})));
+    if(!ready)return;
+    setStep("analyzing");setError("");
+    setProg(files.map(f=>({name:f.name,status:"pending"})));
     const done=[];
     for(let i=0;i<files.length;i++){
       const f=files[i];
@@ -441,15 +721,16 @@ function App(){
       setProg(p=>p.map((x,j)=>j===i?{...x,status:"extracting"}:x));
       try{
         const extracted=isPDF?await fromPDF(f):isImg?await fromImage(f):await fromDOCX(f);
-        if(extracted.isImageBased){
-          const r={candidate_name:f.name.replace(/\.[^.]+$/,""),score:null,match_level:null,_fileObj:f,_file:f.name,_isVision:true,_imageOnly:true};
+        if(extracted.isImageBased&&!extracted.images.length){
+          const r={candidate_name:f.name.replace(/\.[^.]+$/,""),score:null,match_level:null,_file:f.name,_fileObj:f,_imageOnly:true};
           done.push(r);
-          setProg(p=>p.map((x,j)=>j===i?{...x,status:"image",result:r}:x));
+          setProg(p=>p.map((x,j)=>j===i?{...x,status:"image"}:x));
         } else {
           setProg(p=>p.map((x,j)=>j===i?{...x,status:"analyzing"}:x));
           const r=await analyzeCV(extracted,jobTitle,jobDesc,apiKey);
-          r._fileObj=f;r._file=f.name;r._isVision=false;r._imageOnly=false;done.push(r);
-          setProg(p=>p.map((x,j)=>j===i?{...x,status:"done",result:r}:x));
+          r._file=f.name;r._fileObj=f;r._imageOnly=false;r._isVision=extracted.isImageBased;
+          done.push(r);
+          setProg(p=>p.map((x,j)=>j===i?{...x,status:"done"}:x));
         }
       }catch(err){
         setProg(p=>p.map((x,j)=>j===i?{...x,status:"error",msg:err.message}:x));
@@ -457,280 +738,23 @@ function App(){
       if(i<files.length-1)await new Promise(r=>setTimeout(r,400));
     }
     if(!done.length){setError("All files failed. Check file formats or API key.");setStep("setup");return;}
-    setResults(done.sort((a,b)=>{if(a._imageOnly&&!b._imageOnly)return 1;if(!a._imageOnly&&b._imageOnly)return -1;return(b.score??0)-(a.score??0);}));
+    setResults(done.sort((a,b)=>{if(a._imageOnly&&!b._imageOnly)return 1;if(!a._imageOnly&&b._imageOnly)return-1;return(b.score||0)-(a.score||0);}));
     setStep("results");
   };
 
-  const handleShare=()=>{
-    const html=generateShareHTML(results,jobTitle);
-    const fname="cv-results-"+jobTitle.replace(/[^a-zA-Z0-9]/g,"-").toLowerCase()+".html";
-    downloadFile(html,fname,"text/html");
-    setShareMsg("Downloaded! Send this HTML file to your coworker — they can open it in any browser.");
-    setTimeout(()=>setShareMsg(""),5000);
-  };
+  const showResults=step==="results"||step==="analyzing";
 
-  const reset=()=>{setStep("setup");setResults([]);setProg([]);setFiles([]);setJobTitle("");setJobDesc("");setError("");setOpen(null);setShowAll(false);setFilters({gender:"",country:"",companies:[],universities:[],ageMin:"",ageMax:"",matchLevel:""});setSortBy("score");setShareMsg("");};
-  const toggleCard=i=>{setOpen(v=>v===i?null:i);};
-  const doneN=progress.filter(p=>p.status==="done"||p.status==="error"||p.status==="image").length;
-  const okN=progress.filter(p=>p.status==="done").length;
-  const pct=progress.length?Math.round((doneN/progress.length)*100):0;
-  const ready=jobTitle.trim()&&files.length>0&&apiKey.trim();
-
-  const sidebar=(
-    <aside className="app-sidebar" style={{width:370,minWidth:370,height:"100%",background:"linear-gradient(180deg,#0D2171 0%,#1E3A9E 100%)",display:"flex",flexDirection:"column",padding:"22px 20px",overflowY:"auto"}}>
-      <div style={{marginBottom:22,paddingBottom:18,borderBottom:"1px solid rgba(255,255,255,0.1)",display:"flex",alignItems:"center",gap:11}}>
-        <img src={LOGO} alt="Focal" style={{width:38,height:38,borderRadius:8,display:"block",objectFit:"cover"}}/>
-        <div>
-          <div style={{fontSize:18,fontWeight:800,color:"white",lineHeight:1,letterSpacing:"-0.3px"}}>Focal ME</div>
-          <div style={{fontSize:9,color:"rgba(255,255,255,0.4)",letterSpacing:"2px",textTransform:"uppercase",marginTop:3}}>CV Screener Pro</div>
-        </div>
-      </div>
-
-      <div style={{marginBottom:13}}>
-        <label style={{display:"block",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.42)",textTransform:"uppercase",letterSpacing:2,marginBottom:7}}>API Key <span style={{color:"#FCA5A5"}}>*</span></label>
-        <div style={{position:"relative"}}>
-          <input className="s-input" type={showKey?"text":"password"} value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="sk-ant-..." style={{paddingRight:40}}/>
-          <button onClick={()=>setShowKey(s=>!s)} style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:"rgba(255,255,255,0.4)",cursor:"pointer",fontSize:14,padding:0}}>{showKey?"\uD83D\uDD12":"\uD83D\uDC41"}</button>
-        </div>
-        <div style={{fontSize:9,color:"rgba(255,255,255,0.22)",marginTop:4}}>Stored locally in your browser only</div>
-      </div>
-
-      <div style={{marginBottom:13}}>
-        <label style={{display:"block",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.42)",textTransform:"uppercase",letterSpacing:2,marginBottom:7}}>Job Title <span style={{color:"#FCA5A5"}}>*</span></label>
-        <input className="s-input" value={jobTitle} onChange={e=>setJobTitle(e.target.value)} placeholder="e.g. Senior Software Engineer"/>
-      </div>
-
-      <div style={{marginBottom:13}}>
-        <label style={{display:"block",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.42)",textTransform:"uppercase",letterSpacing:2,marginBottom:7}}>Job Description</label>
-        <textarea className="s-input" value={jobDesc} onChange={e=>setJobDesc(e.target.value)} rows={3} placeholder="Paste job posting for more accurate scoring..."/>
-      </div>
-
-      <div style={{marginBottom:16}}>
-        <label style={{display:"block",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.42)",textTransform:"uppercase",letterSpacing:2,marginBottom:7}}>Top N to highlight</label>
-        <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-          {[3,5,10,15,20].map(n=>(
-            <button key={n} onClick={()=>setTopN(n)} style={{padding:"6px 11px",borderRadius:7,border:"1px solid "+(topN===n?"#93C5FD":"rgba(255,255,255,0.15)"),background:topN===n?"rgba(147,197,253,0.2)":"rgba(255,255,255,0.05)",color:topN===n?"white":"rgba(255,255,255,0.55)",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Top {n}</button>
-          ))}
-        </div>
-      </div>
-
-      <div onDrop={onDrop} onDragOver={e=>{e.preventDefault();setDrag(true);}} onDragLeave={()=>setDrag(false)} onClick={()=>fileRef.current?.click()} style={{border:"2px dashed "+(dragging?"#93C5FD":"rgba(255,255,255,0.18)"),borderRadius:10,padding:"16px 12px",textAlign:"center",cursor:"pointer",background:dragging?"rgba(147,197,253,0.1)":"rgba(255,255,255,0.03)",transition:"all .2s",marginBottom:12}}>
-        <input ref={fileRef} type="file" multiple accept=".pdf,.docx,.jpg,.jpeg,.png" onChange={e=>addFiles(e.target.files)} style={{display:"none"}}/>
-        <div style={{fontSize:22,marginBottom:5}}>{"\u2601\uFE0F"}</div>
-        <div style={{fontSize:12,fontWeight:500,color:"rgba(255,255,255,0.55)",marginBottom:2}}>Drop CVs or click to browse</div>
-        <div style={{fontSize:10,color:"rgba(255,255,255,0.25)"}}>PDF / Word / JPG / PNG</div>
-      </div>
-
-      {files.length>0&&<div style={{marginBottom:14,maxHeight:160,overflowY:"auto"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
-          <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5}}>{files.length} file{files.length!==1?"s":""}</div>
-          <button onClick={clearAll} style={{background:"none",border:"none",color:"rgba(255,255,255,0.4)",fontSize:10,cursor:"pointer",fontFamily:"inherit",textDecoration:"underline"}}>Clear all</button>
-        </div>
-        {files.map((f,i)=>(
-          <div key={f.name+i} style={{display:"flex",alignItems:"center",gap:7,padding:"5px 8px",background:"rgba(255,255,255,0.06)",borderRadius:7,marginBottom:3,border:"1px solid rgba(255,255,255,0.08)"}}>
-            <span style={{fontSize:12,flexShrink:0}}>{f.name.endsWith(".pdf")?"\uD83D\uDCC4":f.name.match(/\.(jpg|jpeg|png)$/i)?"\uD83D\uDDBC\uFE0F":"\uD83D\uDCDD"}</span>
-            <span style={{flex:1,fontSize:11,color:"rgba(255,255,255,0.7)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{f.name}</span>
-            <button onPointerDown={e=>{e.preventDefault();e.stopPropagation();}} onClick={e=>removeFile(e,i)} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.12)",color:"rgba(255,255,255,0.5)",cursor:"pointer",padding:"1px 5px",borderRadius:5,fontFamily:"inherit",flexShrink:0}}>{"\u2715"}</button>
-          </div>
-        ))}
-      </div>}
-
-      {error&&<div style={{background:"rgba(239,68,68,0.12)",border:"1px solid rgba(239,68,68,0.3)",color:"#FCA5A5",padding:"9px 12px",borderRadius:8,fontSize:11,marginBottom:12,lineHeight:1.5}}>{error}</div>}
-      {!files.length&&<div style={{flex:1}}/>}
-
-      <button onClick={step==="results"?reset:analyze} disabled={step==="setup"&&!ready} style={{width:"100%",padding:"12px",background:step==="results"?"rgba(255,255,255,0.15)":ready?"#2563EB":"rgba(255,255,255,0.06)",color:(step==="results"||ready)?"white":"rgba(255,255,255,0.25)",border:"1px solid "+(step==="results"?"rgba(255,255,255,0.25)":ready?"#3B82F6":"rgba(255,255,255,0.08)"),borderRadius:10,fontSize:13,fontWeight:700,cursor:(step==="setup"&&!ready)?"default":"pointer",fontFamily:"inherit",marginTop:"auto"}}>
-        {step==="results"?"\u21BA New Search":step==="analyzing"?"Analyzing... "+pct+"%":!apiKey.trim()?"Enter your API key first":!files.length?"Upload CVs to begin":!jobTitle.trim()?"Enter a job title first":"Analyze "+files.length+" CV"+(files.length!==1?"s":"")+" \u2192"}
-      </button>
-
-      {step==="results"&&<button onClick={handleShare} style={{width:"100%",padding:"11px",background:"rgba(16,185,129,0.15)",color:"#6EE7B7",border:"1px solid rgba(16,185,129,0.3)",borderRadius:10,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginTop:8,display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>{"\uD83D\uDD17"} Share Results</button>}
-      {shareMsg&&<div style={{fontSize:11,color:"#6EE7B7",marginTop:6,lineHeight:1.5,textAlign:"center"}}>{shareMsg}</div>}
-
-      <div style={{marginTop:12,fontSize:9,color:"rgba(255,255,255,0.18)",textAlign:"center",lineHeight:1.6}}>{"\u00A9"} 2025 Focal Middle East</div>
-    </aside>
-  );
-
-  let main;
-  if(step==="setup"){
-    main=(
-      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100%",padding:"40px 48px",textAlign:"center",overflow:"auto"}}>
-        <img src={LOGO} alt="Focal" style={{width:72,height:72,borderRadius:16,marginBottom:16,boxShadow:"0 8px 30px rgba(13,33,113,0.25)"}}/>
-        <h1 style={{fontSize:28,fontWeight:800,color:"#0D2171",marginBottom:8,letterSpacing:"-0.6px"}}>AI-Powered CV Screening</h1>
-        <p style={{fontSize:14,color:"#64748B",maxWidth:500,lineHeight:1.8,marginBottom:28}}>Upload CVs, set the role, and let AI rank every candidate — then share results with your team.</p>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,maxWidth:680,width:"100%",marginBottom:28}}>
-          {[["\uD83D\uDCE4","Upload","PDF, Word, JPG, PNG"],["\uD83E\uDDE0","Full-Text AI","Reads the entire CV"],["\uD83C\uDFC6","Ranked + Filtered","Sort & filter results"],["\uD83D\uDD17","Share Results","Send to coworkers"]].map(([ic,t,d])=>(
-            <div key={t} style={{background:"white",border:"1.5px solid #DBEAFE",borderRadius:13,padding:"18px 14px",boxShadow:"0 1px 4px rgba(59,130,246,0.08)"}}>
-              <div style={{fontSize:22,marginBottom:10}}>{ic}</div>
-              <div style={{fontSize:13,fontWeight:700,color:"#0D2171",marginBottom:3}}>{t}</div>
-              <div style={{fontSize:11,color:"#94A3B8",lineHeight:1.5}}>{d}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{display:"flex",alignItems:"center",gap:10,padding:"13px 22px",background:"#EFF6FF",border:"1.5px solid #BFDBFE",borderRadius:10,fontSize:13,color:"#1E40AF"}}>{"\u2190"} Enter your <strong>API key</strong>, <strong>job title</strong> & upload CVs to begin.</div>
-      </div>
-    );
-  } else if(step==="analyzing"){
-    main=(
-      <div style={{padding:"32px 40px",overflowY:"auto",height:"100%"}}>
-        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:18}}>
-          <img src={LOGO} alt="Focal" style={{width:44,height:44,borderRadius:10}}/>
-          <div>
-            <div style={{fontSize:11,color:"#3B82F6",fontWeight:700,textTransform:"uppercase",letterSpacing:2}}>Scanning Candidates</div>
-            <h2 style={{fontSize:20,fontWeight:800,color:"#0D2171"}}>Analyzing for <span style={{color:"#2563EB"}}>{jobTitle}</span></h2>
-          </div>
-        </div>
-        <div style={{height:8,background:"#DBEAFE",borderRadius:5,overflow:"hidden",maxWidth:600,marginBottom:6}}>
-          <div style={{height:"100%",width:pct+"%",background:"linear-gradient(90deg,#1B4FD8,#38BDF8)",borderRadius:5,transition:"width .5s ease"}}/>
-        </div>
-        <div style={{fontSize:12,color:"#64748B",marginBottom:20,display:"flex",justifyContent:"space-between",maxWidth:600}}>
-          <span>{okN} scored / {doneN}/{progress.length} complete</span>
-          <span style={{fontWeight:700,color:"#2563EB"}}>{pct}%</span>
-        </div>
-        <div style={{display:"flex",flexDirection:"column",gap:7,maxWidth:660}}>
-          {progress.map((p,i)=>(
-            <div key={p.name} className="fu" style={{display:"flex",alignItems:"center",gap:12,padding:"12px 15px",background:"white",border:"1.5px solid "+({pending:"#F1F5F9",extracting:"#DBEAFE",analyzing:"#EDE9FE",done:"#BFDBFE",error:"#FECACA",image:"#DDD6FE"}[p.status]||"#F1F5F9"),borderRadius:10}}>
-              <div style={{width:36,height:36,borderRadius:"50%",background:{pending:"#F8FAFC",extracting:"#EFF6FF",analyzing:"#F5F3FF",done:"#EFF6FF",error:"#FEF2F2",image:"#F5F3FF"}[p.status]||"#F8FAFC",border:"1.5px solid "+({pending:"#E2E8F0",extracting:"#BFDBFE",analyzing:"#DDD6FE",done:"#BFDBFE",error:"#FECACA",image:"#DDD6FE"}[p.status]||"#E2E8F0"),display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                {p.status==="pending"&&<span style={{fontSize:11,color:"#94A3B8",fontWeight:600}}>{i+1}</span>}
-                {p.status==="extracting"&&<Spin color="#3B82F6"/>}
-                {p.status==="analyzing"&&<Spin color="#7C3AED"/>}
-                {p.status==="done"&&<span style={{color:"#2563EB",fontSize:16}}>{"\u2713"}</span>}
-                {p.status==="image"&&<span style={{fontSize:14}}>{"\uD83D\uDDBC\uFE0F"}</span>}
-                {p.status==="error"&&<span style={{color:"#EF4444",fontSize:16}}>{"\u2715"}</span>}
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:13,fontWeight:600,color:"#0D2171",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.name}</div>
-                <div style={{fontSize:11,color:p.status==="error"?"#EF4444":"#94A3B8",marginTop:2}}>{
-                  p.status==="image"?"\uD83D\uDDBC\uFE0F Image CV \u2014 manual review":
-                  {pending:"Waiting...",extracting:"Reading CV...",analyzing:"AI scoring...",done:p.result&&!p.result._imageOnly?p.result.candidate_name+" \u00B7 "+p.result.score+"/100":"Done",error:p.msg||"Failed"}[p.status]
-                }</div>
-              </div>
-              {p.status==="done"&&p.result&&<div style={{textAlign:"right",flexShrink:0}}>
-                <div style={{fontSize:21,fontWeight:800,color:p.result.score>=75?"#10B981":p.result.score>=50?"#F59E0B":"#EF4444",lineHeight:1}}>{p.result.score}</div>
-                <div style={{fontSize:9,color:"#94A3B8",textTransform:"uppercase",letterSpacing:1}}>score</div>
-              </div>}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  } else {
-    const scoredResults=results.filter(r=>!r._imageOnly);
-    const imageOnlyResults=results.filter(r=>r._imageOnly);
-    const hasFilters=!!(filters.matchLevel||filters.gender||filters.country||filters.ageMin||filters.ageMax||(filters.companies||[]).length>0||(filters.universities||[]).length>0);
-    const topList=hasFilters?displayResults:displayResults.slice(0,topN);
-    const rest=hasFilters?[]:displayResults.slice(topN);
-    const filteredOut=scoredResults.length-displayResults.length;
-    main=(
-      <div style={{padding:"20px 28px",overflowY:"auto",height:"100%"}}>
-        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
-          <img src={LOGO} alt="Focal" style={{width:38,height:38,borderRadius:9}}/>
-          <div>
-            <div style={{fontSize:10,color:"#3B82F6",fontWeight:700,textTransform:"uppercase",letterSpacing:2}}>Results</div>
-            <h2 style={{fontSize:19,fontWeight:800,color:"#0D2171"}}>Top Candidates — <span style={{color:"#2563EB"}}>{jobTitle}</span></h2>
-          </div>
-        </div>
-        <p style={{fontSize:12,color:"#64748B",marginBottom:14,marginLeft:48}}>
-          {displayResults.length} of {scoredResults.length} candidates{filteredOut>0&&<span style={{color:"#F59E0B",fontWeight:600}}> ({filteredOut} filtered out)</span>} · click any card to expand
-        </p>
-
-        <FilterBar results={results} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy}/>
-
-        {displayResults.length===0&&(
-          <div style={{textAlign:"center",padding:"40px 20px",background:"white",border:"1.5px solid #DBEAFE",borderRadius:12,maxWidth:820}}>
-            <div style={{fontSize:32,marginBottom:10}}>{"\uD83D\uDD0D"}</div>
-            <div style={{fontSize:15,fontWeight:700,color:"#0D2171",marginBottom:6}}>No candidates match your filters</div>
-            <div style={{fontSize:13,color:"#64748B"}}>Try adjusting or clearing the filters above.</div>
-          </div>
-        )}
-
-        <div style={{display:"flex",flexDirection:"column",gap:10,maxWidth:820}}>
-          {topList.map((c,i)=>{
-            const rk=rankMeta(i);const ms=MATCH[c.match_level]||MATCH.Poor;const isOpen=openIdx===i;
-            return(
-              <div key={c._file+i} className="fu" style={{background:"white",border:(i<3?"1.5px":"1px")+" solid "+(isOpen?"#2563EB":rk.border),borderRadius:12,overflow:"hidden",boxShadow:isOpen?"0 0 0 3px rgba(37,99,235,0.1)":"0 1px 4px rgba(59,130,246,0.07)"}}>
-                <div onClick={()=>toggleCard(i)} style={{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",cursor:"pointer",background:isOpen?"#F0F7FF":"transparent",userSelect:"none"}}>
-                  <div style={{background:rk.hbg,border:"1px solid "+rk.border+"55",borderRadius:8,padding:"5px 8px",fontSize:11,fontWeight:700,color:rk.ac,flexShrink:0,textAlign:"center",minWidth:48,lineHeight:1.4}}>{rk.medal}<br/><span style={{fontSize:9}}>{rk.badge}</span></div>
-                  <MiniRing score={c.score} size={52}/>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{display:"flex",alignItems:"center",gap:7,flexWrap:"wrap",marginBottom:2}}>
-                      <span style={{fontSize:15,fontWeight:700,color:"#0D2171"}}>{c.candidate_name}</span>
-                      <span style={{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:20,background:ms.bg,color:ms.c,display:"inline-flex",alignItems:"center",gap:4}}><span style={{width:5,height:5,borderRadius:"50%",background:ms.dot,flexShrink:0}}/>{c.match_level}</span>
-                    </div>
-                    <div style={{display:"flex",flexWrap:"wrap",gap:6,fontSize:11,color:"#64748B"}}>
-                      {c.current_role&&<span>{c.current_role}</span>}
-                      {c.years_experience!=null&&<span style={{color:"#94A3B8"}}>{"\u00B7"} {c.years_experience}yr exp</span>}
-                      {c.age!=null&&<span style={{color:"#7C3AED",fontWeight:600}}>{"\u00B7"} Age {c.age}</span>}
-                      {(c.nationality||c.location)&&<span style={{color:"#0891B2"}}>{"\u00B7"} {"\uD83C\uDF0D"} {c.nationality||c.location}</span>}
-                      {c.gender&&<span style={{color:"#64748B"}}>{"\u00B7"} {c.gender==="Male"?"\u2642":"\u2640"} {c.gender}</span>}
-                      {c.me_experience>0&&<span style={{background:"#FFF7ED",color:"#C2410C",border:"1px solid #FED7AA",borderRadius:20,fontSize:10,fontWeight:700,padding:"1px 7px"}}>{"\uD83C\uDDE6\uD83C\uDDEA"} {c.me_experience}yr ME</span>}
-                    </div>
-                  </div>
-                  {!isOpen&&c.key_skills?.length>0&&<div style={{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"flex-end",maxWidth:220}}>{c.key_skills.slice(0,3).map((s,si)=>(<span key={si} style={{fontSize:10,padding:"2px 8px",background:"#EFF6FF",color:"#1D4ED8",borderRadius:20,border:"1px solid #BFDBFE",whiteSpace:"nowrap"}}>{s}</span>))}</div>}
-                  <span style={{fontSize:14,color:"#94A3B8",flexShrink:0}}>{isOpen?"\u25B2":"\u25BC"}</span>
-                </div>
-                {isOpen&&<CandidateDetail c={c} showCV={true}/>}
-              </div>
-            );
-          })}
-        </div>
-
-        {imageOnlyResults.length>0&&<div style={{marginTop:16,maxWidth:820}}>
-          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10,padding:"10px 14px",background:"#F5F3FF",border:"1.5px solid #DDD6FE",borderRadius:10}}>
-            <span style={{fontSize:16}}>{"\uD83D\uDDBC\uFE0F"}</span>
-            <div>
-              <div style={{fontSize:13,fontWeight:700,color:"#5B21B6"}}>Image-based CVs</div>
-              <div style={{fontSize:11,color:"#6D28D9",marginTop:1}}>These couldn't be scored — you can still view them below</div>
-            </div>
-          </div>
-          <div style={{display:"flex",flexDirection:"column",gap:8}}>
-            {imageOnlyResults.map((c,i)=>{
-              const isOpenImg=openIdx==="img"+i;
-              return(
-                <div key={i} style={{background:"white",border:"1px solid "+(isOpenImg?"#2563EB":"#DDD6FE"),borderRadius:12,overflow:"hidden"}}>
-                  <div onClick={()=>setOpen(v=>v==="img"+i?null:"img"+i)} style={{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",cursor:"pointer",background:isOpenImg?"#F0F7FF":"transparent",userSelect:"none"}}>
-                    <div style={{width:52,height:52,borderRadius:10,background:"#F5F3FF",border:"1.5px solid #DDD6FE",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:22}}>{"\uD83D\uDDBC\uFE0F"}</div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:15,fontWeight:700,color:"#0D2171",marginBottom:3}}>{c.candidate_name}</div>
-                      <div style={{fontSize:11,color:"#7C3AED"}}>Image CV — not scored</div>
-                    </div>
-                    <span style={{fontSize:13,color:"#94A3B8",flexShrink:0}}>{isOpenImg?"\u25B2":"\u25BC"}</span>
-                  </div>
-                  {isOpenImg&&<div style={{borderTop:"1px solid #EDE9FE",padding:"14px 18px",background:"#FAFAFF"}}><CVViewer candidate={c}/></div>}
-                </div>
-              );
-            })}
-          </div>
-        </div>}
-
-        {rest.length>0&&<div style={{marginTop:10,padding:"12px 14px",background:"white",border:"1px solid #DBEAFE",borderRadius:10,maxWidth:820}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:showAll?8:0}}>
-            <div style={{fontSize:12,fontWeight:600,color:"#0D2171"}}>{rest.length} more candidate{rest.length!==1?"s":""} ranked below top {topN}</div>
-            <button onClick={()=>setShowAll(s=>!s)} style={{background:"none",border:"1px solid #BFDBFE",color:"#2563EB",fontSize:12,cursor:"pointer",fontFamily:"inherit",padding:"4px 11px",borderRadius:7,fontWeight:600}}>{showAll?"Hide":"Show all"}</button>
-          </div>
-          {showAll&&<div style={{display:"flex",flexDirection:"column",gap:4,maxHeight:320,overflowY:"auto",marginTop:8}}>
-            {rest.map((r,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 11px",background:"#F8FAFF",border:"1px solid #DBEAFE",borderRadius:7}}>
-                <span style={{fontSize:11,color:"#94A3B8",fontWeight:600,minWidth:32}}>#{topN+i+1}</span>
-                <span style={{flex:1,fontSize:12,color:"#0D2171",fontWeight:600}}>{r.candidate_name}</span>
-                {r.age!=null&&<span style={{fontSize:11,color:"#7C3AED",fontWeight:500}}>Age {r.age}</span>}
-                {(r.nationality||r.location)&&<span style={{fontSize:11,color:"#0891B2"}}>{"\uD83C\uDF0D"} {r.nationality||r.location}</span>}
-                <span style={{fontSize:13,fontWeight:800,color:r.score>=75?"#10B981":r.score>=50?"#F59E0B":"#EF4444",minWidth:28,textAlign:"right"}}>{r.score}</span>
-              </div>
-            ))}
-          </div>}
-        </div>}
-      </div>
-    );
-  }
-
-  return(
-    <div className="app-shell" style={{display:"flex",height:"100vh",overflow:"hidden"}}>
-      {sidebar}
-      <main className="app-main" style={{flex:1,background:"#EEF4FF",overflow:"hidden",display:"flex",flexDirection:"column"}}>{main}</main>
-    </div>
+  return R("div",{className:"app-shell",style:{display:"flex",height:"100vh",overflow:"hidden"}},
+    R(Sidebar,{jobTitle,setJobTitle,jobDesc,setJobDesc,apiKey,setApiKey,showKey,setShowKey,topN,setTopN,files,setFiles,addFiles,removeFile,clearFiles,onAnalyze:analyze,ready,step}),
+    R("main",{className:"app-main",style:{flex:1,background:"#EEF4FF",overflowY:"auto",height:"100%"}},
+      error&&R("div",{style:{padding:"12px 20px",background:"#FEF2F2",border:"1px solid #FECACA",margin:"16px 24px",borderRadius:8,color:"#DC2626",fontSize:13}},error),
+      !showResults&&R(Welcome),
+      showResults&&R(ResultsPanel,{results,topN,jobTitle,progress,step})
+    )
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+ReactDOM.createRoot(document.getElementById("root")).render(R(App));
 </script>
 </body>
 </html>
