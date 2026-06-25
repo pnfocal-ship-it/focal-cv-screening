@@ -578,14 +578,14 @@ function App(){
             <h2 style={{fontSize:20,fontWeight:800,color:"#0D2171"}}>Analyzing for <span style={{color:"#2563EB"}}>{jobTitle}</span></h2>
           </div>
         </div>
-        <div style={{height:8,background:"#DBEAFE",borderRadius:5,overflow:"hidden",maxWidth:600,marginBottom:6}}>
+        <div style={{height:8,background:"#DBEAFE",borderRadius:5,overflow:"hidden",maxWidth:"100%",marginBottom:6}}>
           <div style={{height:"100%",width:pct+"%",background:"linear-gradient(90deg,#1B4FD8,#38BDF8)",borderRadius:5,transition:"width .5s ease"}}/>
         </div>
-        <div style={{fontSize:12,color:"#64748B",marginBottom:20,display:"flex",justifyContent:"space-between",maxWidth:600}}>
+        <div style={{fontSize:12,color:"#64748B",marginBottom:20,display:"flex",justifyContent:"space-between",maxWidth:"100%"}}>
           <span>{okN} scored / {doneN}/{progress.length} complete</span>
           <span style={{fontWeight:700,color:"#2563EB"}}>{pct}%</span>
         </div>
-        <div style={{display:"flex",flexDirection:"column",gap:7,maxWidth:660}}>
+        <div style={{display:"flex",flexDirection:"column",gap:7,maxWidth:"100%"}}>
           {progress.map((p,i)=>(
             <div key={p.name} className="fu" style={{display:"flex",alignItems:"center",gap:12,padding:"12px 15px",background:"white",border:"1.5px solid "+({pending:"#F1F5F9",extracting:"#DBEAFE",analyzing:"#EDE9FE",done:"#BFDBFE",error:"#FECACA",image:"#DDD6FE"}[p.status]||"#F1F5F9"),borderRadius:10}}>
               <div style={{width:36,height:36,borderRadius:"50%",background:{pending:"#F8FAFC",extracting:"#EFF6FF",analyzing:"#F5F3FF",done:"#EFF6FF",error:"#FEF2F2",image:"#F5F3FF"}[p.status]||"#F8FAFC",border:"1.5px solid "+({pending:"#E2E8F0",extracting:"#BFDBFE",analyzing:"#DDD6FE",done:"#BFDBFE",error:"#FECACA",image:"#DDD6FE"}[p.status]||"#E2E8F0"),display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
@@ -635,14 +635,14 @@ function App(){
         <FilterBar results={results} filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy}/>
 
         {displayResults.length===0&&(
-          <div style={{textAlign:"center",padding:"40px 20px",background:"white",border:"1.5px solid #DBEAFE",borderRadius:12,maxWidth:820}}>
+          <div style={{textAlign:"center",padding:"40px 20px",background:"white",border:"1.5px solid #DBEAFE",borderRadius:12,maxWidth:"100%"}}>
             <div style={{fontSize:32,marginBottom:10}}>{"\uD83D\uDD0D"}</div>
             <div style={{fontSize:15,fontWeight:700,color:"#0D2171",marginBottom:6}}>No candidates match your filters</div>
             <div style={{fontSize:13,color:"#64748B"}}>Try adjusting or clearing the filters above.</div>
           </div>
         )}
 
-        <div style={{display:"flex",flexDirection:"column",gap:10,maxWidth:820}}>
+        <div style={{display:"flex",flexDirection:"column",gap:10,maxWidth:"100%"}}>
           {topList.map((c,i)=>{
             const rk=rankMeta(i);const ms=MATCH[c.match_level]||MATCH.Poor;const isOpen=openIdx===i;
             return(
@@ -673,7 +673,7 @@ function App(){
           })}
         </div>
 
-        {imageOnlyResults.length>0&&<div style={{marginTop:16,maxWidth:820}}>
+        {imageOnlyResults.length>0&&<div style={{marginTop:16,maxWidth:"100%"}}>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10,padding:"10px 14px",background:"#F5F3FF",border:"1.5px solid #DDD6FE",borderRadius:10}}>
             <span style={{fontSize:16}}>{"\uD83D\uDDBC\uFE0F"}</span>
             <div>
@@ -701,7 +701,7 @@ function App(){
           </div>
         </div>}
 
-        {rest.length>0&&<div style={{marginTop:10,padding:"12px 14px",background:"white",border:"1px solid #DBEAFE",borderRadius:10,maxWidth:820}}>
+        {rest.length>0&&<div style={{marginTop:10,padding:"12px 14px",background:"white",border:"1px solid #DBEAFE",borderRadius:10,maxWidth:"100%"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:showAll?8:0}}>
             <div style={{fontSize:12,fontWeight:600,color:"#0D2171"}}>{rest.length} more candidate{rest.length!==1?"s":""} ranked below top {topN}</div>
             <button onClick={()=>setShowAll(s=>!s)} style={{background:"none",border:"1px solid #BFDBFE",color:"#2563EB",fontSize:12,cursor:"pointer",fontFamily:"inherit",padding:"4px 11px",borderRadius:7,fontWeight:600}}>{showAll?"Hide":"Show all"}</button>
