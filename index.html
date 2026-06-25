@@ -552,7 +552,7 @@ function App(){
   let main;
   if(step==="setup"){
     main=(
-      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100%",padding:"40px 60px",textAlign:"center",overflow:"auto"}}>
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100%",padding:"40px 60px",textAlign:"center",flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
         <img src={LOGO} alt="Focal" style={{width:72,height:72,borderRadius:16,marginBottom:16,boxShadow:"0 8px 30px rgba(13,33,113,0.25)"}}/>
         <h1 style={{fontSize:28,fontWeight:800,color:"#0D2171",marginBottom:8,letterSpacing:"-0.6px"}}>AI-Powered CV Screening</h1>
         <p style={{fontSize:14,color:"#64748B",maxWidth:500,lineHeight:1.8,marginBottom:28}}>Upload CVs, set the role, and let AI rank every candidate — then share results with your team.</p>
@@ -570,7 +570,7 @@ function App(){
     );
   } else if(step==="analyzing"){
     main=(
-      <div style={{padding:"24px 32px",overflowY:"auto",height:"100%"}}>
+      <div style={{padding:"24px 32px",flex:1}}>
         <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:18}}>
           <img src={LOGO} alt="Focal" style={{width:44,height:44,borderRadius:10}}/>
           <div>
@@ -620,7 +620,7 @@ function App(){
     const rest=hasFilters?[]:displayResults.slice(topN);
     const filteredOut=scoredResults.length-displayResults.length;
     main=(
-      <div style={{padding:"20px 32px",overflowY:"auto",height:"100%"}}>
+      <div style={{padding:"20px 32px",flex:1}}>
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
           <img src={LOGO} alt="Focal" style={{width:38,height:38,borderRadius:9}}/>
           <div>
@@ -725,7 +725,7 @@ function App(){
   return(
     <div className="app-shell" style={{display:"flex",height:"100vh",overflow:"hidden"}}>
       {sidebar}
-      <main className="app-main" style={{flex:1,background:"#EEF4FF",overflow:"hidden",display:"flex",flexDirection:"column"}}>{main}</main>
+      <main className="app-main" style={{flex:1,background:"#EEF4FF",overflowY:"auto",overflowX:"hidden",display:"flex",flexDirection:"column"}}>{main}</main>
     </div>
   );
 }
